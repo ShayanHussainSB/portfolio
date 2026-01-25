@@ -1,0 +1,8 @@
+# Robots.txt for Shayan M Hussain Portfolio
+# https://shayanmhussain.com
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://shayanmhussain.com/sitemap.xml
