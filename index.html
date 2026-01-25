@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Primary Meta Tags - SEO Optimized for "Shayan M Hussain" -->
-    <title>Shayan M Hussain | Senior Backend Engineer | Node.js, TypeScript, Rust Expert</title>
-    <meta name="title" content="Shayan M Hussain | Senior Backend Engineer | Node.js, TypeScript, Rust Expert">
-    <meta name="description" content="Shayan M Hussain is a Senior Backend Engineer with 7+ years building production systems. Expert in Node.js, TypeScript, Rust, GraphQL, and AWS. 10+ production deployments with zero security incidents. 3x Hackathon Winner.">
-    <meta name="keywords" content="Shayan M Hussain, Shayan Hussain, Senior Backend Engineer, Node.js Developer, TypeScript Expert, Rust Developer, GraphQL, PostgreSQL, AWS, Backend Developer, Full Stack Developer, Software Engineer, Remote Developer">
+    <title>Shayan M Hussain | Senior Backend & Platform Engineer | Developer Tooling Expert</title>
+    <meta name="title" content="Shayan M Hussain | Senior Backend & Platform Engineer | Developer Tooling Expert">
+    <meta name="description" content="Shayan M Hussain builds developer platforms and tooling — SDKs, code generators, and real-time infrastructure. 7+ years shipping production systems across gaming, blockchain, and fintech. Zero security incidents. Node.js, TypeScript, Rust expert.">
+    <meta name="keywords" content="Shayan M Hussain, Shayan Hussain, Senior Backend Engineer, Platform Engineer, SDK Developer, Developer Tooling, Node.js, TypeScript, Rust, GraphQL, Code Generation, API Design, Backend Developer, Remote Developer">
     <meta name="author" content="Shayan M Hussain">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://shayanmhussain.com/">
@@ -16,8 +16,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://shayanmhussain.com/">
-    <meta property="og:title" content="Shayan M Hussain | Senior Backend Engineer">
-    <meta property="og:description" content="Senior Backend Engineer with 7+ years building production systems. Expert in Node.js, TypeScript, Rust, GraphQL, and AWS. 10+ production deployments with zero security incidents.">
+    <meta property="og:title" content="Shayan M Hussain | Backend & Platform Engineer">
+    <meta property="og:description" content="I build developer platforms — SDKs, code generators, and real-time infrastructure. 7+ years shipping across gaming, blockchain, and fintech. Zero security incidents.">
     <meta property="og:image" content="https://shayanmhussain.com/og-image.png">
     <meta property="og:site_name" content="Shayan M Hussain Portfolio">
     <meta property="og:locale" content="en_US">
@@ -25,8 +25,8 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://shayanmhussain.com/">
-    <meta property="twitter:title" content="Shayan M Hussain | Senior Backend Engineer">
-    <meta property="twitter:description" content="Senior Backend Engineer with 7+ years building production systems. Expert in Node.js, TypeScript, Rust, GraphQL, and AWS.">
+    <meta property="twitter:title" content="Shayan M Hussain | Backend & Platform Engineer">
+    <meta property="twitter:description" content="I build developer platforms — SDKs, code generators, and real-time infrastructure. Node.js, TypeScript, Rust expert.">
     <meta property="twitter:image" content="https://shayanmhussain.com/og-image.png">
 
     <!-- Additional SEO Meta Tags -->
@@ -45,13 +45,13 @@
         "alternateName": ["Shayan Hussain", "Shayan Muhammad Hussain"],
         "url": "https://shayanmhussain.com",
         "image": "https://shayanmhussain.com/og-image.png",
-        "jobTitle": "Senior Backend Engineer",
+        "jobTitle": "Senior Backend & Platform Engineer",
         "worksFor": {
             "@type": "Organization",
             "name": "Freelance / Independent"
         },
-        "description": "Senior Backend Engineer with 7+ years of experience building production systems and distributed architectures. Expert in Node.js, TypeScript, Rust, NestJS, PostgreSQL, GraphQL, and AWS.",
-        "knowsAbout": ["Node.js", "TypeScript", "Rust", "GraphQL", "PostgreSQL", "AWS", "NestJS", "Backend Development", "API Design", "System Architecture", "WebSockets", "Docker", "CI/CD"],
+        "description": "Senior Backend Engineer specializing in developer tooling and platform infrastructure. Builds SDKs, code generators, and real-time systems. Background in gaming, blockchain, and fintech infrastructure.",
+        "knowsAbout": ["SDK Development", "Code Generation", "Developer Tooling", "Node.js", "TypeScript", "Rust", "GraphQL", "PostgreSQL", "Platform Engineering", "API Design", "Real-Time Systems", "Distributed Systems"],
         "email": "mailto:shayanhussain48@gmail.com",
         "telephone": "+92-303-2111067",
         "sameAs": [
@@ -73,7 +73,7 @@
         "@type": "WebSite",
         "name": "Shayan M Hussain Portfolio",
         "url": "https://shayanmhussain.com",
-        "description": "Portfolio website of Shayan M Hussain, Senior Backend Engineer specializing in Node.js, TypeScript, Rust, and distributed systems.",
+        "description": "Portfolio of Shayan M Hussain, Backend & Platform Engineer specializing in developer tooling, SDKs, and real-time infrastructure.",
         "author": {
             "@type": "Person",
             "name": "Shayan M Hussain"
@@ -89,10 +89,13 @@
         "mainEntity": {
             "@type": "Person",
             "name": "Shayan M Hussain",
-            "jobTitle": "Senior Backend Engineer"
+            "jobTitle": "Senior Backend & Platform Engineer"
         }
     }
     </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -718,6 +721,14 @@
             overflow: hidden;
         }
 
+        @media (max-width: 1024px) {
+            .hero-image-wrapper {
+                width: 320px;
+                height: 320px;
+                right: 5%;
+            }
+        }
+
         .hero-content {
             position: relative;
             z-index: 2;
@@ -925,45 +936,222 @@
             writing-mode: vertical-rl;
         }
 
-        /* Floating Elements */
-        .hero-float {
+        /* Hero Image */
+        .hero-image-wrapper {
             position: absolute;
-            right: 10%;
+            right: 8%;
             top: 50%;
             transform: translateY(-50%);
-            width: 400px;
-            height: 400px;
+            width: 420px;
+            height: 420px;
             opacity: 0;
             animation: fadeIn 1.5s ease 0.5s forwards;
         }
 
-        .float-circle {
-            position: absolute;
-            border-radius: 50%;
-            border: 1px solid var(--gray-800);
-            animation: float 20s infinite ease-in-out;
-        }
-
-        .float-circle:nth-child(1) {
+        .hero-image-container {
+            position: relative;
             width: 100%;
             height: 100%;
-            animation-delay: 0s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .float-circle:nth-child(2) {
-            width: 80%;
-            height: 80%;
-            top: 10%;
-            left: 10%;
-            animation-delay: -5s;
+        /* Animated gradient ring */
+        .hero-image-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #6366f1,
+                #8b5cf6,
+                #a855f7,
+                #ec4899,
+                #f43f5e,
+                #6366f1
+            );
+            animation: rotateRing 8s linear infinite;
+            opacity: 0.8;
         }
 
-        .float-circle:nth-child(3) {
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
+        .hero-image-ring::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: var(--gray-950);
+            border-radius: 50%;
+        }
+
+        @keyframes rotateRing {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Glow effect */
+        .hero-image-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(99, 102, 241, 0.3) 0%,
+                rgba(139, 92, 246, 0.2) 30%,
+                transparent 70%
+            );
+            filter: blur(40px);
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* The actual image */
+        .hero-image {
+            position: relative;
+            width: 92%;
+            height: 92%;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        /* Gradient overlay for theme cohesion */
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(99, 102, 241, 0.15) 0%,
+                transparent 50%,
+                rgba(168, 85, 247, 0.1) 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                circle at 30% 20%,
+                transparent 0%,
+                rgba(9, 9, 11, 0.3) 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            /* Dramatic dark theme filter */
+            filter:
+                grayscale(30%)
+                contrast(1.15)
+                brightness(0.95)
+                saturate(0.9);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero-image-container:hover .hero-image::before {
+            opacity: 0;
+        }
+
+        .hero-image-container:hover img {
+            filter:
+                grayscale(0%)
+                contrast(1.1)
+                brightness(1.05)
+                saturate(1.1);
+            transform: scale(1.08);
+        }
+
+        /* Floating orbital dots */
+        .hero-orbit {
+            position: absolute;
+            width: 110%;
+            height: 110%;
+            animation: orbitSpin 20s linear infinite;
+        }
+
+        .hero-orbit-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .hero-orbit-dot:nth-child(1) {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hero-orbit-dot:nth-child(2) {
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             animation-delay: -10s;
+        }
+
+        .hero-orbit-dot:nth-child(3) {
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+        }
+
+        @keyframes orbitSpin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Status indicator */
+        .hero-status {
+            position: absolute;
+            bottom: 10%;
+            right: 10%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--gray-800);
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: var(--gray-300);
+            z-index: 3;
+            opacity: 0;
+            animation: fadeIn 1s ease 1.5s forwards;
+        }
+
+        .hero-status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: statusPulse 2s ease infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
         }
 
         @keyframes float {
@@ -1505,6 +1693,177 @@
             }
         }
 
+        /* Fun Facts - Floating badges */
+        .fun-fact {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--gray-300);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fun-fact.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fun-fact:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .fun-fact-icon {
+            font-size: 1.1rem;
+        }
+
+        .fun-fact-text {
+            line-height: 1.4;
+        }
+
+        .fun-fact-text strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* Fun fact marquee/ticker */
+        .fun-fact-ticker {
+            position: relative;
+            overflow: hidden;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--gray-800);
+            border-bottom: 1px solid var(--gray-800);
+            margin: 6rem 0;
+        }
+
+        .fun-fact-ticker-inner {
+            display: flex;
+            gap: 4rem;
+            animation: tickerScroll 30s linear infinite;
+            width: max-content;
+        }
+
+        .fun-fact-ticker:hover .fun-fact-ticker-inner {
+            animation-play-state: paused;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--gray-400);
+            white-space: nowrap;
+        }
+
+        .ticker-item span {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .ticker-separator {
+            color: var(--gray-700);
+            font-size: 1.5rem;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Floating fun fact card */
+        .floating-fact {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            max-width: 280px;
+            padding: 1.25rem;
+            background: rgba(9, 9, 11, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--gray-800);
+            border-radius: 1rem;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .floating-fact.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        .floating-fact-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .floating-fact-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+        }
+
+        .floating-fact-close {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--gray-700);
+            border-radius: 50%;
+            color: var(--gray-400);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .floating-fact-close:hover {
+            background: var(--gray-800);
+            color: var(--white);
+        }
+
+        .floating-fact-text {
+            font-size: 0.9rem;
+            color: var(--gray-300);
+            line-height: 1.5;
+        }
+
+        .floating-fact-text strong {
+            color: var(--white);
+        }
+
+        .floating-fact-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .floating-fact {
+                left: 1rem;
+                right: 1rem;
+                max-width: none;
+                bottom: 1rem;
+            }
+
+            .fun-fact-ticker {
+                margin: 4rem 0;
+            }
+        }
+
         /* Achievements */
         .achievements-row {
             display: flex;
@@ -1748,8 +2107,55 @@
                 display: none;
             }
 
+            .hero {
+                padding-top: 6rem;
+            }
+
             .hero-title {
                 font-size: clamp(2.5rem, 12vw, 4rem);
+            }
+
+            .hero-image-wrapper {
+                position: relative;
+                right: auto;
+                top: auto;
+                transform: none;
+                width: 200px;
+                height: 200px;
+                margin: 0 auto 2rem;
+                order: -1;
+            }
+
+            .hero-content {
+                text-align: center;
+            }
+
+            .hero-eyebrow {
+                justify-content: center;
+            }
+
+            .hero-eyebrow::before {
+                display: none;
+            }
+
+            .hero-subtitle {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-cta {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .hero-status {
+                bottom: -10%;
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+            .hero-orbit {
+                display: none;
             }
 
             .stats-grid {
@@ -1770,6 +2176,18 @@
     </style>
 </head>
 <body>
+    <!-- Floating Fun Fact -->
+    <div class="floating-fact" id="floatingFact">
+        <div class="floating-fact-header">
+            <span class="floating-fact-label">Did you know?</span>
+            <button class="floating-fact-close" id="floatingFactClose">✕</button>
+        </div>
+        <div class="floating-fact-emoji" id="floatingFactEmoji">🎯</div>
+        <div class="floating-fact-text" id="floatingFactText">
+            I once built an entire SDK ecosystem that generates code in <strong>4 different languages</strong> from a single GraphQL schema
+        </div>
+    </div>
+
     <!-- Custom Cursor -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-dot" id="cursorDot"></div>
@@ -1881,13 +2299,13 @@
     <!-- Hero Section -->
     <section class="hero" id="about" aria-label="About Shayan M Hussain">
         <div class="hero-content">
-            <p class="hero-eyebrow">Senior Backend Engineer</p>
+            <p class="hero-eyebrow">Backend & Platform Engineer</p>
             <h1 class="hero-title">
                 <span class="line"><span class="line-inner">Shayan M</span></span>
                 <span class="line"><span class="line-inner outline">Hussain</span></span>
             </h1>
             <p class="hero-subtitle">
-                Senior Backend Engineer with 7+ years building production systems that scale. Expert in Node.js, TypeScript, Rust, and distributed architectures. Currently open to remote opportunities.
+                I build the systems that developers build on — SDKs, code generators, and real-time infrastructure. 7+ years shipping across gaming, blockchain, and fintech. Zero security incidents.
             </p>
             <div class="hero-cta">
                 <a href="#contact" class="btn btn-primary magnetic"><span>Get in Touch</span></a>
@@ -1895,10 +2313,23 @@
             </div>
         </div>
 
-        <div class="hero-float">
-            <div class="float-circle"></div>
-            <div class="float-circle"></div>
-            <div class="float-circle"></div>
+        <div class="hero-image-wrapper">
+            <div class="hero-image-container">
+                <div class="hero-image-glow"></div>
+                <div class="hero-image-ring"></div>
+                <div class="hero-image">
+                    <img src="shayan.jpg" alt="Shayan M Hussain - Backend & Platform Engineer" loading="eager">
+                </div>
+                <div class="hero-orbit">
+                    <div class="hero-orbit-dot"></div>
+                    <div class="hero-orbit-dot"></div>
+                    <div class="hero-orbit-dot"></div>
+                </div>
+            </div>
+            <div class="hero-status">
+                <span class="hero-status-dot"></span>
+                <span>Available for work</span>
+            </div>
         </div>
 
         <div class="scroll-indicator">
@@ -1961,59 +2392,87 @@
             <div class="skills-left">
                 <span class="section-label">Capabilities</span>
                 <h2 class="section-title reveal-up">Technical<br>Expertise</h2>
-                <p class="hero-subtitle reveal-up" style="animation: none; opacity: 1;">A comprehensive toolkit built over 7 years of shipping production systems across startups and enterprises.</p>
+                <p class="hero-subtitle reveal-up" style="animation: none; opacity: 1;">Specialized in developer tooling and platform infrastructure — the systems that other engineers build on.</p>
+                <div class="fun-fact" style="margin-top: 1.5rem;">
+                    <span class="fun-fact-icon">🛠️</span>
+                    <span class="fun-fact-text">I've built SDKs in <strong>4 different languages</strong> from a single GraphQL schema</span>
+                </div>
             </div>
             <div class="skills-right">
                 <div class="skill-category reveal-up">
-                    <div class="skill-category-title">Backend & APIs</div>
+                    <div class="skill-category-title">Core Stack</div>
                     <div class="skill-list">
                         <span class="skill-item">Node.js</span>
+                        <span class="skill-item">TypeScript</span>
+                        <span class="skill-item">Rust</span>
+                        <span class="skill-item">PostgreSQL</span>
+                        <span class="skill-item">GraphQL</span>
+                        <span class="skill-item">REST APIs</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up">
+                    <div class="skill-category-title">Platform & Tooling</div>
+                    <div class="skill-list">
+                        <span class="skill-item">SDK Development</span>
+                        <span class="skill-item">Code Generation</span>
+                        <span class="skill-item">AST Parsing</span>
+                        <span class="skill-item">API Design</span>
+                        <span class="skill-item">Client Libraries</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up">
+                    <div class="skill-category-title">Backend Frameworks</div>
+                    <div class="skill-list">
                         <span class="skill-item">NestJS</span>
                         <span class="skill-item">Express</span>
                         <span class="skill-item">Fastify</span>
-                        <span class="skill-item">GraphQL</span>
-                        <span class="skill-item">REST</span>
                         <span class="skill-item">WebSockets</span>
                         <span class="skill-item">gRPC</span>
                     </div>
                 </div>
                 <div class="skill-category reveal-up">
-                    <div class="skill-category-title">Languages</div>
-                    <div class="skill-list">
-                        <span class="skill-item">TypeScript</span>
-                        <span class="skill-item">JavaScript</span>
-                        <span class="skill-item">Rust</span>
-                        <span class="skill-item">Python</span>
-                        <span class="skill-item">SQL</span>
-                        <span class="skill-item">Bash</span>
-                    </div>
-                </div>
-                <div class="skill-category reveal-up">
-                    <div class="skill-category-title">Databases</div>
-                    <div class="skill-list">
-                        <span class="skill-item">PostgreSQL</span>
-                        <span class="skill-item">MongoDB</span>
-                        <span class="skill-item">Redis</span>
-                        <span class="skill-item">MySQL</span>
-                        <span class="skill-item">Prisma</span>
-                        <span class="skill-item">TypeORM</span>
-                    </div>
-                </div>
-                <div class="skill-category reveal-up">
-                    <div class="skill-category-title">Cloud & DevOps</div>
+                    <div class="skill-category-title">Infrastructure</div>
                     <div class="skill-list">
                         <span class="skill-item">AWS</span>
                         <span class="skill-item">Docker</span>
                         <span class="skill-item">GitHub Actions</span>
-                        <span class="skill-item">CI/CD</span>
-                        <span class="skill-item">Nginx</span>
                         <span class="skill-item">Prometheus</span>
-                        <span class="skill-item">Grafana</span>
+                        <span class="skill-item">Redis</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Fun Fact Ticker -->
+    <div class="fun-fact-ticker">
+        <div class="fun-fact-ticker-inner">
+            <div class="ticker-item">☕ <span>500+ cups of coffee</span> consumed while coding</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🎮 <span>3× Hackathon Winner</span> — built under pressure</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🌍 <span>5+ time zones</span> collaborated across</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🔐 <span>Zero security incidents</span> across all deployments</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">⚡ <span>1000× data compression</span> achieved</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🚀 <span>4 programming languages</span> generated from one schema</div>
+            <span class="ticker-separator">◆</span>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item">☕ <span>500+ cups of coffee</span> consumed while coding</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🎮 <span>3× Hackathon Winner</span> — built under pressure</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🌍 <span>5+ time zones</span> collaborated across</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🔐 <span>Zero security incidents</span> across all deployments</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">⚡ <span>1000× data compression</span> achieved</div>
+            <span class="ticker-separator">◆</span>
+            <div class="ticker-item">🚀 <span>4 programming languages</span> generated from one schema</div>
+        </div>
+    </div>
 
     <!-- Experience Section -->
     <section class="experience-section" id="work">
@@ -2026,27 +2485,13 @@
                 <div class="experience-content">
                     <h3>Team Lead / Senior Backend Engineer</h3>
                     <div class="experience-company">Ashtar Global Solutions — Remote</div>
-                    <p class="experience-description">Real-time gaming infrastructure company building high-performance backend systems and developer tooling.</p>
+                    <p class="experience-description">Platform engineering for gaming and blockchain infrastructure — developer tools, SDKs, and real-time systems.</p>
                     <ul class="experience-highlights">
+                        <li>Built GraphQL-to-code generator producing type-safe clients in 4 languages (Rust, TS, C#, C++)</li>
+                        <li>Solo-architected complete developer platform: backend + Rust SDK + TypeScript client</li>
+                        <li>Achieved 1000x data compression for on-chain state with cryptographic verification</li>
                         <li>Deployed 10+ production services with zero security incidents</li>
-                        <li>Led engineering teams of up to 4 developers</li>
-                        <li>Solo-architected Resource Manager with Rust SDK and TypeScript client</li>
-                        <li>Built GraphQL schema interpreter generating type-safe clients in 4 languages</li>
-                        <li>Architected data compression achieving 1000x storage cost reduction</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="experience-item reveal-up">
-                <div class="experience-date">2019 — Present</div>
-                <div class="experience-content">
-                    <h3>Freelance Backend Engineer</h3>
-                    <div class="experience-company">Independent Contracts — Remote</div>
-                    <ul class="experience-highlights">
-                        <li>Delivered 15+ backend systems for international clients</li>
-                        <li>Built automated data processing handling 10,000+ records</li>
-                        <li>Developed trading systems with sub-second execution</li>
-                        <li>Led project teams of 2-3 developers</li>
+                        <li>Led team of 4 engineers; owned architecture and code review standards</li>
                     </ul>
                 </div>
             </div>
@@ -2054,14 +2499,32 @@
             <div class="experience-item reveal-up">
                 <div class="experience-date">2022</div>
                 <div class="experience-content">
-                    <h3>Backend Developer</h3>
+                    <h3>MERN Stack Developer</h3>
                     <div class="experience-company">Kahoo Digitals — Remote</div>
                     <ul class="experience-highlights">
-                        <li>Built backend services with Node.js and MongoDB</li>
-                        <li>Implemented SSR with Next.js for SEO optimization</li>
+                        <li>Built full-stack apps with MongoDB, Express, React, Node.js</li>
+                        <li>Implemented JWT auth and SSR with Next.js</li>
                     </ul>
                 </div>
             </div>
+
+            <div class="experience-item reveal-up">
+                <div class="experience-date">2017 — Present</div>
+                <div class="experience-content">
+                    <h3>Freelance Developer</h3>
+                    <div class="experience-company">Upwork — Remote</div>
+                    <ul class="experience-highlights">
+                        <li>Web design → Linux cloud setup → multiplayer game infra (Docker + distributed VMs)</li>
+                        <li>Evolved into backend: 15+ systems across fintech, e-commerce, blockchain</li>
+                        <li>Trading systems with sub-second execution latency</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="fun-fact" style="margin-top: 2rem;">
+            <span class="fun-fact-icon">🚀</span>
+            <span class="fun-fact-text">Started as a generalist, <strong>specialized into platform engineering</strong> — the journey matters</span>
         </div>
     </section>
 
@@ -2074,52 +2537,52 @@
             <a href="https://docs.honeycombprotocol.com" target="_blank" class="project-row reveal-up">
                 <div class="project-index">01</div>
                 <div class="project-main">
-                    <span class="project-label">Gaming Infrastructure</span>
+                    <span class="project-label">Developer Platform</span>
                     <h3 class="project-title">
                         <span class="title-main">Honeycomb Protocol</span>
                     </h3>
-                    <p class="project-description">Core engineer on complete gaming infrastructure platform serving real-time backend for multiple production games. Built Edge Client with GraphQL, real-time subscriptions, and multi-language SDK ecosystem.</p>
+                    <p class="project-description">Developer platform for gaming + blockchain infrastructure. Built GraphQL Edge Client, multi-language SDK ecosystem (TypeScript, Rust, C#), and achieved 1000x data compression for on-chain state.</p>
                     <div class="project-tech">
-                        <span>Node.js</span>
+                        <span>GraphQL</span>
                         <span>TypeScript</span>
                         <span>Rust</span>
-                        <span>GraphQL</span>
-                        <span>PostgreSQL</span>
-                    </div>
-                </div>
-                <div class="project-arrow"><span>↗</span></div>
-            </a>
-
-            <a href="https://github.com/bunwaylabs/bunway" target="_blank" class="project-row reveal-up">
-                <div class="project-index">02</div>
-                <div class="project-main">
-                    <span class="project-label">Open Source</span>
-                    <h3 class="project-title">
-                        <span class="title-main">bunWay</span>
-                    </h3>
-                    <p class="project-description">Solo-built high-performance HTTP router leveraging Bun's native APIs for maximum performance. Express-style routing with zero Node.js compatibility layer overhead. Published to npm.</p>
-                    <div class="project-tech">
-                        <span>TypeScript</span>
-                        <span>Bun Runtime</span>
-                        <span>npm</span>
+                        <span>SDK Development</span>
+                        <span>Code Generation</span>
                     </div>
                 </div>
                 <div class="project-arrow"><span>↗</span></div>
             </a>
 
             <a href="https://docs.gameshift.dev" target="_blank" class="project-row reveal-up">
-                <div class="project-index">03</div>
+                <div class="project-index">02</div>
                 <div class="project-main">
                     <span class="project-label">Developer Platform</span>
                     <h3 class="project-title">
                         <span class="title-main">GameShift</span>
                     </h3>
-                    <p class="project-description">Integrated and maintained NestJS backend service with payment processing APIs, real-time event systems, and WebSocket services for production gaming applications.</p>
+                    <p class="project-description">NestJS backend aggregating asset management, indexers, and real-time services. Payment processing APIs for in-game transactions with WebSocket event distribution.</p>
                     <div class="project-tech">
-                        <span>Node.js</span>
                         <span>NestJS</span>
                         <span>TypeScript</span>
                         <span>WebSockets</span>
+                        <span>Payment APIs</span>
+                    </div>
+                </div>
+                <div class="project-arrow"><span>↗</span></div>
+            </a>
+
+            <a href="https://github.com/bunwaylabs/bunway" target="_blank" class="project-row reveal-up">
+                <div class="project-index">03</div>
+                <div class="project-main">
+                    <span class="project-label">Open Source</span>
+                    <h3 class="project-title">
+                        <span class="title-main">bunWay</span>
+                    </h3>
+                    <p class="project-description">High-performance HTTP router using Bun's native APIs — zero Node.js compatibility overhead. Express-style API with middleware support. Published to npm.</p>
+                    <div class="project-tech">
+                        <span>TypeScript</span>
+                        <span>Bun Runtime</span>
+                        <span>npm</span>
                     </div>
                 </div>
                 <div class="project-arrow"><span>↗</span></div>
@@ -2152,6 +2615,11 @@
             <div class="achievement-title">Open Source Contributor</div>
             <div class="achievement-description">Published packages to npm and crates.io</div>
         </div>
+
+        <div class="fun-fact" style="margin-top: 2.5rem;">
+            <span class="fun-fact-icon">💡</span>
+            <span class="fun-fact-text">Fun fact: Most of my best ideas come during <strong>late-night walks</strong></span>
+        </div>
     </section>
 
     <!-- Contact Section -->
@@ -2171,7 +2639,7 @@
 
     <!-- Footer -->
     <footer role="contentinfo">
-        <p class="footer-text">© 2025 <strong>Shayan M Hussain</strong> — Senior Backend Engineer</p>
+        <p class="footer-text">© 2025 <strong>Shayan M Hussain</strong> — Backend & Platform Engineer</p>
         <div class="footer-links">
             <a href="mailto:shayanhussain48@gmail.com" aria-label="Email Shayan M Hussain">Email</a>
             <a href="https://github.com/ShayanHussainSB" target="_blank" rel="noopener noreferrer" aria-label="Shayan M Hussain GitHub Profile">GitHub</a>
@@ -2329,6 +2797,88 @@
                 el.style.transform = 'translate(0, 0)';
             });
         });
+
+        // Floating Fun Facts
+        const floatingFacts = [
+            { emoji: '🎯', text: 'I once built an entire SDK ecosystem that generates code in <strong>4 different languages</strong> from a single GraphQL schema' },
+            { emoji: '☕', text: 'My most productive debugging session lasted <strong>14 hours straight</strong> — fueled by coffee and determination' },
+            { emoji: '🚀', text: 'Achieved <strong>1000× data compression</strong> while maintaining full data integrity' },
+            { emoji: '🌙', text: 'I code best between <strong>10 PM and 2 AM</strong> — night owl developer' },
+            { emoji: '🔧', text: 'Built a complete backend service <strong>solo from scratch</strong> including Rust SDK and TypeScript client' },
+            { emoji: '🌍', text: 'Have collaborated with teams across <strong>5+ time zones</strong> simultaneously' },
+            { emoji: '📊', text: 'Processed <strong>10,000+ records</strong> with 99.9% accuracy in automated pipelines' },
+            { emoji: '⚡', text: 'Built trading systems with <strong>sub-second execution</strong> for real-time market data' },
+            { emoji: '🎮', text: 'Won <strong>3 hackathons</strong> by shipping working products under extreme time pressure' },
+            { emoji: '🔐', text: 'Maintained <strong>zero security incidents</strong> across all production deployments' }
+        ];
+
+        const floatingFact = document.getElementById('floatingFact');
+        const floatingFactClose = document.getElementById('floatingFactClose');
+        const floatingFactEmoji = document.getElementById('floatingFactEmoji');
+        const floatingFactText = document.getElementById('floatingFactText');
+
+        let factShown = false;
+        let factDismissed = false;
+        let lastFactIndex = -1;
+        let factTimeout = null;
+
+        function showRandomFact() {
+            if (factDismissed) return;
+
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * floatingFacts.length);
+            } while (newIndex === lastFactIndex && floatingFacts.length > 1);
+
+            lastFactIndex = newIndex;
+            const fact = floatingFacts[newIndex];
+
+            floatingFactEmoji.textContent = fact.emoji;
+            floatingFactText.innerHTML = fact.text;
+            floatingFact.classList.add('visible');
+            factShown = true;
+
+            // Auto-hide after 8 seconds
+            if (factTimeout) clearTimeout(factTimeout);
+            factTimeout = setTimeout(() => {
+                floatingFact.classList.remove('visible');
+                factShown = false;
+                // Schedule next fact
+                setTimeout(() => {
+                    if (!factDismissed && window.scrollY > 500) {
+                        showRandomFact();
+                    }
+                }, 15000);
+            }, 8000);
+        }
+
+        floatingFactClose.addEventListener('click', () => {
+            floatingFact.classList.remove('visible');
+            factDismissed = true;
+            if (factTimeout) clearTimeout(factTimeout);
+        });
+
+        // Show first fact after scrolling past hero
+        let factTriggered = false;
+        window.addEventListener('scroll', () => {
+            if (!factTriggered && window.scrollY > 600) {
+                factTriggered = true;
+                setTimeout(showRandomFact, 2000);
+            }
+        });
+
+        // Fun fact badges visibility
+        const funFactBadges = document.querySelectorAll('.fun-fact');
+        function checkFunFactVisibility() {
+            funFactBadges.forEach(badge => {
+                const rect = badge.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 50) {
+                    badge.classList.add('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkFunFactVisibility);
+        checkFunFactVisibility();
     </script>
 </body>
 </html>
