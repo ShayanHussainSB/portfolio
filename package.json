@@ -1,0 +1,33 @@
+{
+  "name": "shayan-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/martian-mono": "^5.3.0",
+    "@joint-ops/hitlimit": "1.5.0",
+    "@joint-ops/kaput": "0.1.0",
+    "@noble/hashes": "2.4.0",
+    "bunway": "1.1.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "0.180.0",
+    "@vitejs/plugin-react": "6",
+    "typescript": "5.9",
+    "vite": "8",
+    "vitest": "5"
+  }
+}

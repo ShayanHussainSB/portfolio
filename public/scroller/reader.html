@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A drawn chapter</title>
+<!--
+  Sheet 06's reading page. The scripts below are Scroller 1.3.0's own content scripts
+  (github.com/ShayanHussainSB/scroller @ 0a4d240, MIT, see LICENSE), copied unmodified.
+  The only stand-in is window.chrome, shaped like the one in scroller's test/harness/stub.js.
+-->
+<style>
+  :root { --ink: #0a1045; --paper: #f3f5fb; }
+  html { background: var(--paper); color: var(--ink); }
+  body { margin: 0; font: 12px/1.5 ui-monospace, monospace; }
+  header { position: sticky; top: 0; z-index: 2; background: var(--ink); color: var(--paper); padding: 10px 16px; }
+  main { max-width: 560px; margin: 0 auto; padding: 0 16px; }
+  main img { display: block; width: 100%; height: auto; margin-top: 28px; }
+  footer { padding: 48px 16px 160px; text-align: center; }
+</style>
+<header>Chapter 01 · drawn for this page</header>
+<main id="strip"></main>
+<footer>End of chapter 01.</footer>
+<script>
+  // Nine storyboard panels in ink line, each at least 200px tall so Pages mode finds them.
+  const scenes = [
+    (h) => `<circle cx="430" cy="${h * 0.32}" r="56"/><path d="M0 ${h * 0.68}H600"/><path d="M40 ${h * 0.68}l90-120 70 80 60-50 110 90"/>`,
+    (h) => `<path d="M0 ${h * 0.5}c80-40 160 40 240 0s160-40 240 0 120 20 120 20"/><path d="M0 ${h * 0.62}c80-40 160 40 240 0s160-40 240 0 120 20 120 20"/>`,
+    (h) => `<rect x="180" y="${h * 0.22}" width="240" height="${h * 0.56}"/><path d="M180 ${h * 0.5}H420M300 ${h * 0.22}V${h * 0.78}"/>`,
+    (h) => `<circle cx="300" cy="${h / 2}" r="${h * 0.3}"/><circle cx="300" cy="${h / 2}" r="${h * 0.18}"/><circle cx="300" cy="${h / 2}" r="6"/>`,
+    (h) => `<path d="M0 ${h}L300 ${h * 0.2}L600 ${h}"/><path d="M220 ${h * 0.42}h160"/>`,
+    (h) => Array.from({ length: 7 }, (_, i) => `<path d="M${60 + i * 80} ${h * 0.15}V${h * 0.85}"/>`).join(''),
+    (h) => `<path d="M60 ${h * 0.8}Q300 ${h * 0.05} 540 ${h * 0.8}"/><circle cx="300" cy="${h * 0.44}" r="14"/>`,
+    (h) => `<path d="M0 ${h * 0.7}H600"/><rect x="250" y="${h * 0.38}" width="100" height="${h * 0.32}"/><path d="M250 ${h * 0.38}l50-50 50 50"/>`,
+    (h) => `<circle cx="300" cy="${h * 0.45}" r="90"/><path d="M0 ${h * 0.75}H600M0 ${h * 0.82}H600"/>`,
+  ]
+  const heights = [820, 560, 960, 700, 1040, 620, 880, 760, 900]
+  document.getElementById('strip').innerHTML = heights.map((h, i) => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 ${h}" width="600" height="${h}">`
+      + `<rect x="1.5" y="1.5" width="597" height="${h - 3}" fill="#fff" stroke="#0a1045" stroke-width="3"/>`
+      + `<g fill="none" stroke="#0a1045" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${scenes[i](h)}</g>`
+      + `<text x="20" y="34" font-family="monospace" font-size="16" fill="#0a1045">PANEL ${String(i + 1).padStart(2, '0')}</text></svg>`
+    return `<img width="600" height="${h}" alt="Panel ${i + 1}" src="data:image/svg+xml,${encodeURIComponent(svg)}">`
+  }).join('')
+
+  // Stand-in chrome API: in-memory storage, and the background script's "running" message goes to the portfolio.
+  {
+    const store = {}, changed = [], messages = []
+    const tell = (m) => parent.postMessage({ scroller: m }, '*')
+    const speedNow = () => store.sites?.[location.hostname.replace(/^www\./, '') || 'local'] ?? store.pxs ?? DEFAULTS.pxs
+    window.chrome = {
+      storage: {
+        local: {
+          get(defaults, cb) { const v = structuredClone({ ...defaults, ...store }); setTimeout(() => cb(v)) },
+          set(o, cb) {
+            const c = {}
+            for (const k in o) { c[k] = { newValue: structuredClone(o[k]) }; store[k] = structuredClone(o[k]) }
+            setTimeout(() => { for (const f of changed) f(c, 'local'); tell({ pxs: speedNow() }); cb?.() })
+            return Promise.resolve()
+          },
+        },
+        onChanged: { addListener: (f) => changed.push(f) },
+      },
+      runtime: {
+        sendMessage: (m) => { tell(m); return Promise.resolve() },
+        onMessage: { addListener: (f) => messages.push(f) },
+      },
+    }
+    // The portfolio's controls take the popup's route in: storage writes and the 'toggle' message.
+    addEventListener('message', (e) => {
+      if (e.source !== parent || !e.data) return
+      const d = e.data
+      if (d.set) chrome.storage.local.set(d.set)
+      if (d.toggle) for (const f of messages) f('toggle', {}, () => {})
+      if (d.top) scrollTo({ top: 0, behavior: 'instant' })
+    })
+    addEventListener('load', () => tell({ pxs: speedNow(), ready: true }))
+  }
+</script>
+<script src="defaults.js"></script>
+<script src="content.js"></script>
+<script src="pages.js"></script>
+<script src="session.js"></script>
+</html>

@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": false,
+    "types": ["vite/client"],
+    // mirrors the vite.config.ts alias: single bunway middleware files (the package exports only its root)
+    "paths": { "bunway/middleware/*": ["./node_modules/bunway/middleware/*"] }
+  },
+  "include": ["src", "api", "vite.config.ts"]
+}
