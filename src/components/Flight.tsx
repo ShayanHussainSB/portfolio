@@ -1,7 +1,30 @@
 import { useEffect, useRef } from 'react'
 import {
-  AdditiveBlending, BoxGeometry, BufferAttribute, BufferGeometry, Color, Fog, Group, HemisphereLight, InstancedMesh, LineBasicMaterial,
-  LineSegments, Mesh, MeshBasicMaterial, MeshLambertMaterial, Object3D, PerspectiveCamera, PlaneGeometry, PointLight, Points, PointsMaterial, Scene, TorusGeometry, Vector3, WebGLRenderer, DoubleSide,
+  AdditiveBlending,
+  BoxGeometry,
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  Fog,
+  Group,
+  HemisphereLight,
+  InstancedMesh,
+  LineBasicMaterial,
+  LineSegments,
+  Mesh,
+  MeshBasicMaterial,
+  MeshLambertMaterial,
+  Object3D,
+  PerspectiveCamera,
+  PlaneGeometry,
+  PointLight,
+  Points,
+  PointsMaterial,
+  Scene,
+  TorusGeometry,
+  Vector3,
+  WebGLRenderer,
+  DoubleSide,
 } from 'three'
 import { content } from '../content'
 import { progress } from '../lib/scroll'
@@ -10,7 +33,10 @@ import { fixedWindow, GATES } from '../lib/stream'
 const GATE_IDS = ['hitlimit', 'bunway', 'state', 'kaput'] as const
 const FEATURED: readonly string[] = content.featured
 const L = 150 // length of the route, in world units
-const COLS = 11, ROWS = 5, HALF_W = 11, HALF_H = 3.2
+const COLS = 11,
+  ROWS = 5,
+  HALF_W = 11,
+  HALF_H = 3.2
 const MAX = 560
 const LIMIT = 22 // admitted per second at the hitlimit gate; ambient traffic stays under it
 const FOLD_FROM = GATES[1] + 0.06
@@ -84,17 +110,24 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     guides.setAttribute('position', new BufferAttribute(new Float32Array(guide), 3))
     scene.add(new LineSegments(guides, new LineBasicMaterial({ color: paper, transparent: true, opacity: 0.1 })))
 
-    const solid = (color: Color, opacity = 1) => new MeshBasicMaterial({ color, transparent: opacity < 1, opacity, side: DoubleSide, depthWrite: opacity === 1 })
+    const solid = (color: Color, opacity = 1) =>
+      new MeshBasicMaterial({ color, transparent: opacity < 1, opacity, side: DoubleSide, depthWrite: opacity === 1 })
     const frame = (w: number, h: number, t: number, color: Color) => {
       const g = new Group()
-      for (const [bw, bh, x, y] of [[w, t, 0, h / 2], [w, t, 0, -h / 2], [t, h, -w / 2, 0], [t, h, w / 2, 0]]) {
+      for (const [bw, bh, x, y] of [
+        [w, t, 0, h / 2],
+        [w, t, 0, -h / 2],
+        [t, h, -w / 2, 0],
+        [t, h, w / 2, 0],
+      ]) {
         const bar = new Mesh(new BoxGeometry(bw + (bh === t ? t : 0), bh, t), solid(color))
         bar.position.set(x, y, 0)
         g.add(bar)
       }
       return g
     }
-    const W = HALF_W * 2 + 3, H = HALF_H * 2 + 3
+    const W = HALF_W * 2 + 3,
+      H = HALF_H * 2 + 3
     const gateZ = GATES.map((f) => -f * L)
     // hitlimit: one hard frame, and the limit as a pane of glass
     const g1 = frame(W, H, 0.14, hues[0])
@@ -139,9 +172,11 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
       while (k + 1 < gateZ.length && z <= gateZ[k + 1]) k++
       return k < 0 ? paper : hues[k]
     }
-    const Z0 = 24, Z1 = -L - 40
+    const Z0 = 24,
+      Z1 = -L - 40
     const wall = (angle: number, z: number, r = FIBRE) => v.set(Math.cos(angle) * r, Math.sin(angle) * r, z)
-    const glass: number[] = [], glassHue: number[] = []
+    const glass: number[] = [],
+      glassHue: number[] = []
     const seg = (a1: number, z1: number, a2: number, z2: number, dim = 1) => {
       wall(a1, z1).toArray(glass, glass.length)
       wall(a2, z2).toArray(glass, glass.length)
@@ -150,7 +185,8 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
         glassHue.push(c.r * dim, c.g * dim, c.b * dim)
       }
     }
-    const STRANDS = 44, STEP = 3
+    const STRANDS = 44,
+      STEP = 3
     for (let k = 0; k < STRANDS; k++)
       for (let z = Z0; z > Z1; z -= STEP) {
         const a = (k / STRANDS) * Math.PI * 2
@@ -160,7 +196,12 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     const glassGeo = new BufferGeometry()
     glassGeo.setAttribute('position', new BufferAttribute(new Float32Array(glass), 3))
     glassGeo.setAttribute('color', new BufferAttribute(new Float32Array(glassHue), 3))
-    scene.add(new LineSegments(glassGeo, new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.75, blending: AdditiveBlending, depthWrite: false })))
+    scene.add(
+      new LineSegments(
+        glassGeo,
+        new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.75, blending: AdditiveBlending, depthWrite: false }),
+      ),
+    )
 
     // transistors: a body, three legs into the wall (source, gate, drain) and a gate plate that lights when it switches
     const CHIPS = 260
@@ -168,11 +209,13 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     const bodies = new InstancedMesh(new BoxGeometry(2.6, 0.7, 1.7), lit, CHIPS)
     const legs = new InstancedMesh(new BoxGeometry(0.16, 1.5, 0.16), new MeshLambertMaterial({ color: new Color('#9a9ab8') }), CHIPS * 3)
     const plates = new InstancedMesh(new BoxGeometry(1.5, 0.1, 1.2), new MeshBasicMaterial(), CHIPS)
-    const chip = new Object3D(), part = new Object3D()
+    const chip = new Object3D(),
+      part = new Object3D()
     chip.add(part)
     const chipHue: Color[] = []
     for (let i = 0; i < CHIPS; i++) {
-      const a = rnd(i) * Math.PI * 2, z = -6 - rnd(i + 0.5) * (-Z1 - 12) // none beside the opening shot, where one would fill the screen
+      const a = rnd(i) * Math.PI * 2,
+        z = -6 - rnd(i + 0.5) * (-Z1 - 12) // none beside the opening shot, where one would fill the screen
       wall(a, z, FIBRE - 1.4)
       chip.position.copy(v)
       chip.up.set(0, 0, 1)
@@ -191,14 +234,23 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     }
     const dust: number[] = []
     for (let i = 0; i < 1100; i++) {
-      const a = rnd(i + 0.2) * Math.PI * 2, r = Math.sqrt(rnd(i + 0.4)) * (FIBRE - 2)
+      const a = rnd(i + 0.2) * Math.PI * 2,
+        r = Math.sqrt(rnd(i + 0.4)) * (FIBRE - 2)
       dust.push(Math.cos(a) * r, Math.sin(a) * r, Z0 - rnd(i + 0.7) * (Z0 - Z1))
     }
     const dustGeo = new BufferGeometry()
     dustGeo.setAttribute('position', new BufferAttribute(new Float32Array(dust), 3))
     const lamp = new PointLight(paper, 260, 70, 1.6) // rides with the camera, so the transistors nearby are lit and the far ones fall into fog
-    scene.add(bodies, legs, plates, new Points(dustGeo, new PointsMaterial({ size: 0.06, color: paper, transparent: true, opacity: 0.5 })), new HemisphereLight(paper, ground, 0.9), lamp)
-    const dark = new Color('#16161f'), mixed = new Color()
+    scene.add(
+      bodies,
+      legs,
+      plates,
+      new Points(dustGeo, new PointsMaterial({ size: 0.06, color: paper, transparent: true, opacity: 0.5 })),
+      new HemisphereLight(paper, ground, 0.9),
+      lamp,
+    )
+    const dark = new Color('#16161f'),
+      mixed = new Color()
     const switchGates = (t: number) => {
       for (let i = 0; i < CHIPS; i++) {
         const on = Math.sin(t * (1.5 + rnd(i + 0.9) * 5) + i) > 0.2 // each one switches at its own clock rate
@@ -221,7 +273,11 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     scene.add(mesh)
 
     let ps: Streak[] = []
-    let acc = 0, clock = 0, admitted = 0, refused = 0, flash = 0
+    let acc = 0,
+      clock = 0,
+      admitted = 0,
+      refused = 0,
+      flash = 0
     const admit = fixedWindow(LIMIT, 1000)
     const spawn = (col: number, row: number, fast = false, you = false) => {
       if (ps.length >= MAX) return
@@ -257,7 +313,9 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     }
 
     const dummy = new Object3D()
-    const head = new Vector3(), tail = new Vector3(), you = new Vector3()
+    const head = new Vector3(),
+      tail = new Vector3(),
+      you = new Vector3()
     let youLive = false
     const place = () => {
       youLive = false
@@ -290,8 +348,10 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     }
 
     // ---- camera: an establishing shot from outside, then down the middle of the route
-    let w = 0, h = 0
-    const pointer = { x: 0, y: 0 }, eased = { x: 0, y: 0 }
+    let w = 0,
+      h = 0
+    const pointer = { x: 0, y: 0 },
+      eased = { x: 0, y: 0 }
     const look = new Vector3()
     const fly = (t: number) => {
       const p = progress(host)
@@ -317,7 +377,8 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     // ---- narration: which stage the camera is in, and the live counts
     const caps = hud.current!.querySelectorAll<HTMLElement>('.flyby__cap, .flyby__rail li')
     const counts = hud.current!.querySelectorAll<HTMLElement>('.flyby__stats dd')
-    let stage = -2, lastCount = 0
+    let stage = -2,
+      lastCount = 0
     const narrate = (now: number) => {
       const z = camera.position.z
       let next = progress(host) < 0.07 ? -1 : 0
@@ -368,7 +429,9 @@ export default function Flight({ city, onFail }: { city: string | null; onFail: 
     draw(0)
     c.dataset.ready = 'true'
 
-    let raf = 0, last = 0, onScreen = true
+    let raf = 0,
+      last = 0,
+      onScreen = true
     const frame_ = (now: number) => {
       step(Math.min(0.05, (now - last) / 1000 || 0))
       last = now

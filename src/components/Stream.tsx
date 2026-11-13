@@ -45,10 +45,16 @@ export function Stream({ city }: { city: string | null }) {
     }
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    let w = 0, h = 0, lanes = 0, pad = 0
+    let w = 0,
+      h = 0,
+      lanes = 0,
+      pad = 0
     let guide: HTMLCanvasElement | null = null
     let ps: P[] = []
-    let acc = 0, clock = 0, turnedAway = 0, shownAway = -1
+    let acc = 0,
+      clock = 0,
+      turnedAway = 0,
+      shownAway = -1
     let admit = fixedWindow(LIMIT, 1000)
     const y = (x: number, lane: number) => laneY(x, lane, lanes, w, h, pad)
 
@@ -89,7 +95,8 @@ export function Stream({ city }: { city: string | null }) {
       d.beginPath() // hitlimit: one hard line
       d.moveTo(g1, 0)
       d.lineTo(g1, h)
-      for (let k = 0; k < 4; k++) { // bunWay: four films
+      for (let k = 0; k < 4; k++) {
+        // bunWay: four films
         d.moveTo(g2 + k * 9, pad * 0.4)
         d.lineTo(g2 + k * 9, h - pad * 0.4)
       }
@@ -206,7 +213,9 @@ export function Stream({ city }: { city: string | null }) {
     draw()
     if (still) return
 
-    let raf = 0, last = 0, onScreen = true
+    let raf = 0,
+      last = 0,
+      onScreen = true
     const frame = (t: number) => {
       const dt = Math.min(0.05, (t - last) / 1000 || 0)
       last = t
@@ -257,7 +266,11 @@ export function Stream({ city }: { city: string | null }) {
     <div className="stream">
       <nav className="stream__gates" aria-label="Projects, in the order a request meets them">
         {GATE_IDS.map((id, i) => (
-          <a key={id} href={(content.featured as readonly string[]).includes(id) ? `#${id}` : `#all-${id}`} style={{ left: `${GATES[i] * 100}%`, borderLeftColor: `var(--hue-${id})` }}>
+          <a
+            key={id}
+            href={(content.featured as readonly string[]).includes(id) ? `#${id}` : `#all-${id}`}
+            style={{ left: `${GATES[i] * 100}%`, borderLeftColor: `var(--hue-${id})` }}
+          >
             <b>{content.projects[id].name}</b>
             <span>{content.projects[id].kind}</span>
           </a>
@@ -269,7 +282,9 @@ export function Stream({ city }: { city: string | null }) {
           <i>{city ? s.youFrom(city) : s.you}</i>
         </span>
         <span className="stream__refused" ref={refused} style={{ left: `${GATES[0] * 100}%` }} aria-hidden="true" />
-        <span className="stream__done" aria-hidden="true">{s.done}</span>
+        <span className="stream__done" aria-hidden="true">
+          {s.done}
+        </span>
       </div>
       <p className="sr-only">{s.label}</p>
     </div>

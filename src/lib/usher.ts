@@ -1,5 +1,5 @@
 /**
- * A model of Usher's seat and gate rules for Sheet 06. In Usher, Postgres enforces them (a partial unique
+ * A model of Usher's seat and gate rules for its demo. In Usher, Postgres enforces them (a partial unique
  * index on a show's sold seats; a scan that marks a ticket used in one update). Here a Map stands in for the
  * table. Money is integer paisa; formatPaisa is copied from usher's packages/core/src/money.ts.
  */

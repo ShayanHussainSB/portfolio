@@ -67,7 +67,11 @@ describe('vesselView', () => {
 })
 
 describe('nextVessel', () => {
-  const r = (remaining: number, status: 200 | 429 = 200): Exchange => ({ status, headers: { 'RateLimit-Remaining': String(remaining), 'X-RateLimit-Reset': String(Math.ceil((T + 10_000) / 1000) + 1) }, body: null })
+  const r = (remaining: number, status: 200 | 429 = 200): Exchange => ({
+    status,
+    headers: { 'RateLimit-Remaining': String(remaining), 'X-RateLimit-Reset': String(Math.ceil((T + 10_000) / 1000) + 1) },
+    body: null,
+  })
 
   it('the first hit of a window starts the 10 s clock exactly (no whole-second rounding from the header)', () => {
     expect(nextVessel(null, r(4), T)).toEqual({ remaining: 4, resetAtMs: T + 10_000, rejected: 0 })

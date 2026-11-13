@@ -1,6 +1,6 @@
 /**
  * Quarry's lead score, ported from engine/src/quarry/parse/scoring.py `score()` (audit 1.9.0) with the
- * weights in config/services.toml, both on dev/shayan, 2026-11-12. Sheet 07 feeds it made-up facts.
+ * weights in config/services.toml, both on dev/shayan, 2026-11-12. The demo feeds it made-up facts.
  * ponytail: a hand copy of private code; re-copy the weights when services.toml changes.
  */
 export const SERVICES: Record<string, Record<string, number>> = {
@@ -48,7 +48,13 @@ const roundEven = (x: number) => {
 export function scoreLead(flags: Flag[], reach: Reach): Score {
   const fired = new Set(flags.map((f) => f.rule))
   const fits = Object.fromEntries(
-    Object.entries(SERVICES).map(([s, signals]) => [s, Math.min(100, Object.entries(signals).reduce((n, [r, p]) => n + (fired.has(r) ? p : 0), 0))]),
+    Object.entries(SERVICES).map(([s, signals]) => [
+      s,
+      Math.min(
+        100,
+        Object.entries(signals).reduce((n, [r, p]) => n + (fired.has(r) ? p : 0), 0),
+      ),
+    ]),
   )
   // best fit first; a tie goes to the larger name, as Python's max over (fit, name) does
   const ranked = Object.entries(fits).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? 1 : -1))

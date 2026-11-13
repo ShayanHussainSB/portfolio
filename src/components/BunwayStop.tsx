@@ -8,7 +8,7 @@ const ALL_ON = Object.fromEntries(LAYERS.map((l) => [l, true])) as Record<Layer,
 const only = (l: Layer) => Object.fromEntries(LAYERS.map((k) => [k, k === l])) as Record<Layer, boolean>
 
 /**
- * Sheet 03: bunWay. The visitor's GET passes through the real middleware,
+ * bunWay. The visitor's GET passes through the real middleware,
  * drawn as stacked films; peel one off and its headers leave the response.
  */
 export function BunwayStop() {

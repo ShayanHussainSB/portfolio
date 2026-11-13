@@ -1,5 +1,5 @@
 /**
- * Sheet 05 runs the published kaput `Kaput` class in the visitor's tab. Its
+ * The kaput demo runs the published kaput `Kaput` class in the visitor's tab. Its
  * resources are stand-ins shaped like the real clients, so kaput's own
  * detectors recognise, name and order them. The drain works as in production:
  * once shutdown starts, readiness fails and the load balancer stops routing;
@@ -42,7 +42,14 @@ export function createRig({ gracePeriod = 2000, closeMs = 300, timeout = 30_000,
     onLog?.(format.formatMessage(level, message, meta).replace(ANSI, ''))
     changed()
   }
-  const k = new Kaput({ signals: [], exitProcess: false, forceExitTimeout: 0, gracePeriod, timeout, logger: { debug() {}, info: line('info'), warn: line('warn'), error: line('error') } })
+  const k = new Kaput({
+    signals: [],
+    exitProcess: false,
+    forceExitTimeout: 0,
+    gracePeriod,
+    timeout,
+    logger: { debug() {}, info: line('info'), warn: line('warn'), error: line('error') },
+  })
   k.on({
     onDraining: () => void ((phase = 'draining'), changed()),
     onClosing: () => void ((phase = 'closing'), changed()),
@@ -107,7 +114,11 @@ export function createRig({ gracePeriod = 2000, closeMs = 300, timeout = 30_000,
     },
     stats: () => ({ inFlight: live, served, refused, dropped, phase }),
     /** kaput's resources in its close order, with the state it tracks for each. */
-    resources: () => k.getResources().sort((a, b) => a.order - b.order).map((r) => ({ name: r.name, state: r.state })),
+    resources: () =>
+      k
+        .getResources()
+        .sort((a, b) => a.order - b.order)
+        .map((r) => ({ name: r.name, state: r.state })),
     dispose() {
       timers.forEach(clearTimeout)
       timers.clear()

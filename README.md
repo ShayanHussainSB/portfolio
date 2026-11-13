@@ -4,9 +4,7 @@
 
 A black ground, one hue per project, and a page that scroll plays like a film: a 3D flight down the
 request path, three featured projects that open through their own names, and every project running
-for real in the visitor's tab. Product truth is in `PRODUCT.md`.
-`docs/design.md` and `.impeccable/` describe earlier directions (Cloud Edge,
-SIGNAL) and are kept for history only.
+for real in the visitor's tab. Product truth (audience, facts, principles) is in `PRODUCT.md`.
 
 ## Run
 
@@ -15,6 +13,8 @@ bun install
 bun run dev        # http://localhost:5173  (/api/whoami is mocked as "Localhost → dev1")
 bun run test       # vitest
 bun run typecheck
+bun run format     # prettier (TS only; site.css keeps one rule per line by hand)
+bun run check      # typecheck + tests + format check
 bun run build      # client build + SSR prerender → dist/index.html has the full text
 ```
 
@@ -56,12 +56,13 @@ The canonical address is `https://shayan.jointops.dev`. It is written into these
 ## The page, top to bottom
 
 1. **Flight** (`components/Flight.tsx`, three.js, lazy-loaded): the hero is a tall section with a pinned stage; scroll flies the camera down the request path, through hitlimit, bunWay, Honeycomb and kaput. Reduced motion or no WebGL gets the 2D stream (`Stream.tsx`) instead; no JavaScript gets the headline.
-2. **About**, unchanged.
-3. **Three featured projects** (`content.featured`), each opened by a pinned **scene** (`components/Scene.tsx`): the name is a window onto the project's film (its strip scene at poster size), scroll zooms through it, and the `vision` from `content.projects` is set over it. The working demo follows in normal flow.
-4. **Index** (`Index` in `components/AllWork.tsx`): all seven projects as a directory listing, and **See all work**.
-5. **See all** (`AllWork`): a full-screen `<dialog>` with every project running. `#all` opens it; `#all-<project>` opens it at that project, so those links can be shared.
-6. **Ask the site** (`components/RecordStop.tsx`): a conversation. The visitor picks questions and the site answers for Shayan (`content.stops.record.ask`); one answer is a Brainfuck program that runs on the spot. Then six figures that count up (`stats`). Every claim and number comes from `PRODUCT.md`; keep it that way.
-7. **The reply**: the contact section. Each link (GitHub, LinkedIn, JointOps, email) has a soft, clay-style 3D character on its own stage (`components/Mascots.tsx`: one canvas, one viewport per link, in the order of `content.response.links`). The characters are original; the official GitHub and LinkedIn marks (`lib/icons.ts`) appear only on the badges they hold. Without WebGL the links show flat icons.
+2. **About** (`components/EdgeStop.tsx`): who he is, beside a live readout of the visitor's connection.
+3. **Solana journey** (`components/ChainJourney.tsx`): six pinned chapters. It opens on a gallery of NFT portraits (`JourneyGallery.tsx`); scrolling deeper, `JourneyFlight.tsx` (three.js, lazy) turns them into a winding tunnel with linked blocks on the wall and block rings that fill, seal and show their hash and the previous block's. Each chapter carries a working example (`JourneyExamples.tsx`): a mission game, Merkle compression with a real proof, an indexing pipeline (`lib/asset-pipeline.ts`) and a GraphQL-to-SDK playground (`lib/sdk-example.ts`). Narration is `journeyStory` in `content.ts`; chapter palettes switch light/dark as you go. Reduced motion gets the chapters in normal flow, without WebGL.
+4. **Three featured projects** (`content.featured`), each opened by a pinned **scene** (`components/Scene.tsx`): the name is a window onto the project's film (its strip scene at poster size), scroll zooms through it, and the `vision` from `content.projects` is set over it. The working demo follows in normal flow.
+5. **Index** (`Index` in `components/AllWork.tsx`): all seven projects as a directory listing, and **See all work**.
+6. **See all** (`AllWork`): a full-screen `<dialog>` with every project running. `#all` opens it; `#all-<project>` opens it at that project, so those links can be shared.
+7. **Ask the site** (`components/RecordStop.tsx`): a conversation. The visitor picks questions and the site answers for Shayan (`content.stops.record.ask`); one answer is a Brainfuck program that runs on the spot. Then six figures that count up (`stats`). Every claim and number comes from `PRODUCT.md`; keep it that way.
+8. **The reply**: the contact section. Each link (GitHub, LinkedIn, JointOps, email) has a soft, clay-style 3D character on its own stage (`components/Mascots.tsx`: one canvas, one viewport per link, in the order of `content.response.links`). The characters are original; the official GitHub and LinkedIn marks (`lib/icons.ts`) appear only on the badges they hold. Without WebGL the links show flat icons.
 
 The flight is the inside of an optical fibre: twisting strands of glass, ribs, and transistors on the wall whose gates switch in the colour of the project that owns that stretch (`Flight.tsx`, "the place"). It narrates itself: `content.stream.tour` holds one caption per stage, beside live counts of requests in flight, admitted and turned away.
 
@@ -79,6 +80,8 @@ The flight is the inside of an optical fibre: twisting strands of glass, ribs, a
 | Length of the flight, lanes, gate sizes | `L`, `COLS`, `ROWS`, `HALF_W`, `HALF_H` in `Flight.tsx` |
 | How long the flight and each scene pin | `.hero[data-mode='flight']` and `.scene__pin` heights in `site.css` |
 | Scene timing (zoom, dissolve, vision) | the `calc(... var(--p) ...)` lines under "featured scenes" in `site.css` |
+| Solana tunnel: radius, block rings, records per ring, chapter hues | `R`, `RINGS`, `RECORDS`, `HUES` in `JourneyFlight.tsx` |
+| Solana chapter palettes | `chapterThemes` in `ChainJourney.tsx`, `--j-*` tokens in `site.css` |
 
 ## How it works
 
@@ -103,10 +106,6 @@ The flight is the inside of an optical fibre: twisting strands of glass, ribs, a
 
 Every word on the page lives in `src/content.ts`.
 
-## Assets / facts still needed
-
-- CV PDF, 2–4 testimonials (stage 4). Photos: done (see below).
-
 ## Photos
 
 Your originals live in `photos-original/`. That folder is gitignored and never deployed, because iPhone
@@ -125,8 +124,7 @@ sips -s format jpeg -s formatOptions 78 src/assets/photos/portrait-800.webp --ou
 | `horizon`, `horizon-wide` | IMG_5507 | Contact, printed in blue |
 | `portrait` | IMG_0530 | About, printed in blue |
 | `offcall` | IMG_5346 | kaput, after exit 0 |
-| `chain-solpatrol` | Sol Patrol #3323 (HowRare rank 1), arweave.net/6m345RawbnSFXagmMvSlG4I0hPwQJUoWhABHCK4ZBEg | Chain journey |
-| `chain-madlads` | Mad Lads #8420 (HowRare rank 1), madlads.s3.us-west-2.amazonaws.com/images/8420.png, square crop from y=120 | Chain journey |
-| `chain-bonk` | BONK token icon via Jupiter token API (256px only, so a single size) | Chain journey |
+| `chain-solpatrol` | Sol Patrol #3323 (HowRare rank 1), arweave.net/6m345RawbnSFXagmMvSlG4I0hPwQJUoWhABHCK4ZBEg | Solana journey, mission example |
+| `journey-*` | public NFT artwork; each file's collection, name and original URL are in `journey-sources.json` | Solana journey gallery and tunnel mouth |
 
-Chain art is optional: a block whose `chain-<id>` files are missing renders as type only (The Fracture, until an image is added).
+NFT artwork belongs to its creators. Sol Patrol and Mad Lads relate to documented work; the Fox collections illustrate the wider ecosystem and are labelled that way on the page.

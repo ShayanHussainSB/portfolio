@@ -18,6 +18,7 @@ Open source organisation: https://github.com/JointOps
 
 - Honeycomb Protocol: Web3 game infrastructure on Solana. Shayan built its GraphQL-to-SDK generator, which produces SDKs in 4 languages (JavaScript, C# for Unity, C++ for Unreal Engine, Godot). Honeycomb's state compression makes on-chain game state 1000x or more cheaper while keeping it verifiable.
 - GameShift: NestJS aggregation services, indexers, WebSockets and in-game payment APIs.
+- Solana NFT communities: smart contracts in Anchor/Rust, with GraphQL, Node and React around them, for Sol Patrol, The Fracture, BONK and Mad Lads. Later work reaches into Rust, gRPC and digital asset tooling.
 
 ## Recognition
 

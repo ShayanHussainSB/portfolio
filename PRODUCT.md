@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-User-pinned: React + Vite (no Next.js), fully static output plus one tiny edge function, deployed on Vercel. 3D library choice delegated (React Three Fiber chosen, since Shayan will mostly edit content, not shaders). Bun as package manager.
+User-pinned: React + Vite (no Next.js), fully static output plus one tiny edge function, deployed on Vercel. 3D in plain three.js, lazy-loaded. Bun as package manager.
 
 ## Users
 
@@ -43,8 +43,7 @@ The personal portfolio of Shayan M Hussain, a backend architect with 7+ years of
 - Voice: dry wit and senior, with playful hidden secrets and puzzles.
 - Binding anti-references from Shayan: Matrix code rain, fake typing intros, CRT scanlines, generic spinning globes, purple-gradient SaaS look.
 - Liked references: Linear/Vercel, Stripe Sessions/docs, Teenage Engineering, Bruno Simon / igloo.inc.
-- Pinned world: "dark graphite drafting", an engineering-blueprint aesthetic (the "architect" pun) mixed with cinematic 3D.
-- Pinned concept: "Sheet 01: The Request", a scroll journey following the visitor's request through the request lifecycle (see docs/design.md).
+- Direction: a black ground with one hue per project, played as a cinematic scroll: a 3D flight down the request path, pinned project scenes, and a Solana journey that turns from NFT art into a blockchain tunnel. Earlier directions (Cloud Edge, SIGNAL) were rejected.
 
 ## Evidence on Hand
 
@@ -68,7 +67,8 @@ All verified from GitHub READMEs and npm on 2026-11-12:
   - compression: 1000x or more cheaper on-chain state with verification kept; docs benchmark: create profile 0.0052100 → 0.0000041 (99.92%), mission start 0.0024250 → 0.0000100
 - **GameShift** (name cleared): NestJS aggregation, indexers, WebSockets, in-game payment APIs.
 - **Hackathons:** Sandstorm 2023 winner, Grizzlython 3rd place, Civic Hackathon winner.
-- **Assets Shayan will supply:** photo, CV PDF, testimonials. None exist in the repo yet, and none may be invented.
+- **Solana work** (Shayan's own words): smart contracts in Anchor/Rust with GraphQL, Node and React around them for Sol Patrol, The Fracture, BONK and Mad Lads; later Rust, gRPC and digital asset tooling. NFT artwork shown on the site belongs to its creators; Fox collections are ecosystem illustrations, not work credits.
+- **Assets:** photos supplied. CV PDF and testimonials are still to come from Shayan, and none may be invented.
 - **Contact email:** shayanhussain48@gmail.com (confirmed 2026-11-12).
 
 ## Product Principles

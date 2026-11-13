@@ -1,5 +1,5 @@
 /**
- * Sheet 04: a real Merkle tree, built in the visitor's browser. Hashing follows
+ * A real Merkle tree, built in the visitor's browser. Hashing follows
  * Solana's concurrent Merkle trees (spl-account-compression): Keccak-256,
  * leaf = keccak(data), node = keccak(left ‖ right). The 4,096 leaves are
  * generated example profiles, not Honeycomb data.

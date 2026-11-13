@@ -1,5 +1,5 @@
 /**
- * Sheet 03 runs the published bunway@1.1.0 middleware files, unmodified, in the
+ * The bunWay demo runs the published bunway@1.1.0 middleware files, unmodified, in the
  * visitor's tab: the four that set response headers and need no Bun or Node APIs.
  * (logger and session need Bun file I/O / node:crypto, so they're not faked here.)
  */

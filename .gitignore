@@ -3,13 +3,10 @@ dist
 dist-ssr
 .vercel
 .superpowers
-.impeccable/review
-.impeccable/mocks
-.impeccable/questions
 *.log
 .DS_Store
 photos-original
 public/resumes
 .claude/settings.local.json
-.impeccable/hook.cache.json
 .env*
+.impeccable

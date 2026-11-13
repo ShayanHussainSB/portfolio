@@ -72,8 +72,7 @@ const list = (s: Shell, path: string, all = false): string[] => {
   return [...names].sort()
 }
 
-export const prompt = (s: Shell): string =>
-  s.asking ? 'Trust it anyway (yes/no)?' : s.remote ? `guest@shayan:~${s.cwd && '/' + s.cwd}$` : 'you@browser:~$'
+export const prompt = (s: Shell): string => (s.asking ? 'Trust it anyway (yes/no)?' : s.remote ? `guest@shayan:~${s.cwd && '/' + s.cwd}$` : 'you@browser:~$')
 
 const ok = (text: string): Line => ({ text, tone: 'ok' })
 const bad = (text: string): Line => ({ text, tone: 'fault' })
@@ -118,7 +117,10 @@ const commands: Record<string, Command> = {
   help: (_a, s) => plain(s.remote ? HELP_REMOTE : HELP_LOCAL),
   ls: (args, s) => {
     const all = args.some((a) => /^-\w*a/.test(a))
-    const path = resolve(s.cwd, args.find((a) => !a.startsWith('-')))
+    const path = resolve(
+      s.cwd,
+      args.find((a) => !a.startsWith('-')),
+    )
     if (path in files(s)) return plain(path.split('/').pop()!)
     if (!isDir(s, path)) return [bad(`ls: ${path}: no such file or directory`)]
     return plain(list(s, path, all).join('   '))
@@ -187,7 +189,9 @@ export function run(line: string, s: Shell, who: Visitor): Result {
       shell: { remote: true, cwd: '', asking: false },
       out: [
         ok("Warning: permanently added 'shayan' to the list of hosts you trust on a hunch."),
-        ...plain(`Connected to shayan · Karachi, UTC+5\nLast login: just now, from ${who.city} (request ${who.id})\n${ids.length} projects in ~/projects. help lists what works here.`),
+        ...plain(
+          `Connected to shayan · Karachi, UTC+5\nLast login: just now, from ${who.city} (request ${who.id})\n${ids.length} projects in ~/projects. help lists what works here.`,
+        ),
       ],
     }
   }

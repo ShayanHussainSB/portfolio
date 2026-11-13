@@ -22,7 +22,13 @@ test('closed is always Cold with no bucket; a small unreachable place pays both 
   const closed = scoreLead([...kopi, { rule: 'closed', evidence: 'Marked closed on Maps' }], reach)
   expect(closed.bucket).toBeNull()
   expect(closed.label).toBe('Cold')
-  const small = scoreLead([{ rule: 'no_website', evidence: 'No website on Maps' }, { rule: 'few_reviews', evidence: '12 reviews on Maps' }], { ...reach, phone: false, mobile: false, reviews: 12 })
+  const small = scoreLead(
+    [
+      { rule: 'no_website', evidence: 'No website on Maps' },
+      { rule: 'few_reviews', evidence: '12 reviews on Maps' },
+    ],
+    { ...reach, phone: false, mobile: false, reviews: 12 },
+  )
   // 70×0.6 + 15×0.25 = 45.75 − 15 − 15 = 15.75 → 16
   expect(small.priority).toBe(16)
   expect(small.penalties.map(([k]) => k)).toEqual(['no_contact', 'few_reviews'])

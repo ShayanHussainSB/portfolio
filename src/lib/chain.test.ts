@@ -3,8 +3,8 @@ import { bytesToHex } from '@noble/hashes/utils.js'
 import { describe, expect, it } from 'vitest'
 import { link, short, type Block } from './chain'
 
-const a: Block = { year: '2022', headline: 'Sol Patrol.', line: '' }
-const b: Block = { year: '2023', headline: 'Mad Lads.', line: '' }
+const a: Block = { year: '2022', headline: 'Sol Patrol.' }
+const b: Block = { year: '2023', headline: 'Mad Lads.' }
 
 describe('link', () => {
   it('starts from a zero hash at height 0', () => {
@@ -26,13 +26,11 @@ describe('link', () => {
     expect(link([a])[0].hash).toBe(bytesToHex(keccak_256(buf)))
   })
 
-  it('a changed headline changes every later hash; the line is not hashed', () => {
+  it('a changed headline changes every later hash', () => {
     const base = link([a, b])
     const edited = link([{ ...a, headline: 'Sol Patrol!' }, b])
     expect(edited[0].hash).not.toBe(base[0].hash)
     expect(edited[1].hash).not.toBe(base[1].hash)
-    const relined = link([{ ...a, line: 'anything' }, b])
-    expect(relined.map((x) => x.hash)).toEqual(base.map((x) => x.hash))
   })
 })
 

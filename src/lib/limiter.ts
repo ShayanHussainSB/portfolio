@@ -1,5 +1,5 @@
 /**
- * Sheet 02 runs the published @joint-ops/hitlimit middleware, unmodified, in
+ * The hitlimit demo runs the published @joint-ops/hitlimit middleware, unmodified, in
  * the visitor's tab. hitlimit is a fixed-window counter: `limit` hits per
  * window, and the whole window resets at once.
  */

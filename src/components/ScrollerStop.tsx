@@ -5,7 +5,7 @@ import { StopSheet } from './StopSheet'
 type Mode = keyof typeof content.stops.scroller.modes
 
 /**
- * Sheet 06: scroller. A sandboxed page runs the extension's real content scripts
+ * scroller. A sandboxed page runs the extension's real content scripts
  * (public/scroller/); these controls talk to it the way the popup does.
  */
 export function ScrollerStop() {

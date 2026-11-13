@@ -19,7 +19,12 @@ export function Strip({ id, film = false }: { id: keyof typeof SCENES; film?: bo
       mono: css.getPropertyValue('--mono').trim(),
     }
     const scene = SCENES[id]
-    let w = 0, h = 0, t = START, raf = 0, last = 0, onScreen = false
+    let w = 0,
+      h = 0,
+      t = START,
+      raf = 0,
+      last = 0,
+      onScreen = false
     const draw = () => {
       if (!w || !h) return // hidden (a featured project's own strip): nothing to draw on
       g.clearRect(0, 0, w, h)

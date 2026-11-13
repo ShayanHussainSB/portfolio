@@ -12,7 +12,19 @@ let nextKey = 0
 const entries = (lines: Line[]): Entry[] => lines.map((l, i) => ({ ...l, key: nextKey++, i }))
 
 /** A drop-down terminal. It really runs what you type (lib/shell.ts); `ssh guest@shayan` is the way in. */
-export function Terminal({ open, who, mailHref, onClose, onOpen }: { open: boolean; who: Visitor; mailHref: string; onClose: () => void; onOpen: (id: string) => void }) {
+export function Terminal({
+  open,
+  who,
+  mailHref,
+  onClose,
+  onOpen,
+}: {
+  open: boolean
+  who: Visitor
+  mailHref: string
+  onClose: () => void
+  onOpen: (id: string) => void
+}) {
   const dialog = useRef<HTMLDialogElement>(null)
   const scroll = useRef<HTMLDivElement>(null)
   const input = useRef<HTMLInputElement>(null)

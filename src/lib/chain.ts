@@ -1,13 +1,19 @@
 /**
- * The chain journey's blocks, hash-linked for real:
+ * The Solana journey's illustrative ledger, hash-linked for real:
  * hash = keccak256(prev ‖ utf8(year + ' ' + headline)), the first prev being 32 zero bytes.
- * Edit a headline in content.ts and every later hash on the page changes.
  */
 import { keccak_256 } from '@noble/hashes/sha3.js'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils.js'
 
-export interface Block { year: string; headline: string; line: string; art?: string; alt?: string; href?: string; cta?: boolean }
-export interface Linked extends Block { height: number; hash: string; prev: string }
+export interface Block {
+  year: string
+  headline: string
+}
+export interface Linked extends Block {
+  height: number
+  hash: string
+  prev: string
+}
 
 const utf8 = new TextEncoder()
 

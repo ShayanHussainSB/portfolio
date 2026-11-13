@@ -17,7 +17,11 @@ import { fetchObservation, replyHref, type Observation } from './lib/observe'
 const FEATURED = { hitlimit: HitlimitStop, quarry: QuarryStop, scroller: ScrollerStop }
 
 /** `#all` opens the "See all" screen; `#all-<project>` opens it at that project. */
-const allTarget = () => /^#all(?:-(\w+))?$/.exec(location.hash)?.slice(1).map((id) => id ?? 'all')[0] ?? null
+const allTarget = () =>
+  /^#all(?:-(\w+))?$/
+    .exec(location.hash)
+    ?.slice(1)
+    .map((id) => id ?? 'all')[0] ?? null
 
 export function App() {
   const [obs, setObs] = useState<Observation | null>(null)
@@ -69,7 +73,13 @@ export function App() {
         <nav aria-label="Main navigation">
           <a href="#work">{content.nav.work}</a>
           <a href="#about">{content.nav.about}</a>
-          <button type="button" className="site-header__term mono" onClick={() => setTerm(true)} aria-label={content.terminal.button} title={`${content.terminal.button} ( \` )`}>
+          <button
+            type="button"
+            className="site-header__term mono"
+            onClick={() => setTerm(true)}
+            aria-label={content.terminal.button}
+            title={`${content.terminal.button} ( \` )`}
+          >
             &gt;_
           </button>
           <a href={ctaHref} className="site-header__cta">

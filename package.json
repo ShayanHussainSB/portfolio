@@ -1,14 +1,39 @@
 {
   "name": "shayan-portfolio",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
+  "description": "Personal portfolio of Shayan M Hussain: a scroll-driven 3D flight down the request path, with every project running live in the browser.",
+  "author": "Shayan M Hussain (https://github.com/ShayanHussainSB)",
+  "homepage": "https://shayan.jointops.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShayanHussainSB/portfolio.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ShayanHussainSB/portfolio/issues"
+  },
+  "keywords": [
+    "portfolio",
+    "react",
+    "threejs",
+    "webgl",
+    "vite",
+    "vercel",
+    "typescript"
+  ],
   "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"api/**/*.ts\" \"scripts/**/*.mjs\" vite.config.ts",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\" \"api/**/*.ts\" \"scripts/**/*.mjs\" vite.config.ts",
+    "check": "bun run typecheck && bun run test && bun run format:check"
   },
   "dependencies": {
     "@fontsource-variable/archivo": "^5.3.0",
@@ -28,6 +53,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "0.180.0",
     "@vitejs/plugin-react": "6",
+    "prettier": "3.3.3",
     "typescript": "5.9",
     "vite": "8",
     "vitest": "5"

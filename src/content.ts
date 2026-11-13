@@ -13,11 +13,31 @@ export const content = {
     scroll: 'Scroll to fly the route',
     /** The flight's narration, one caption per stage. `limit` and `lanes` are the numbers the scene really runs with. */
     tour: (limit: number, lanes: number, city: string | null) => [
-      { tag: '00 · fibre', title: 'You are light in a fibre.', body: `The bright pulse is your request${city ? `, from ${city}` : ''}. The blocks on the wall are transistors, switching as traffic passes.` },
-      { tag: '01 · hitlimit', title: 'First gate: the rate limit.', body: `A fixed window lets ${limit} requests a second through. The rest fall away with a 429, long before they reach anything expensive.` },
-      { tag: '02 · bunWay', title: 'Four films of middleware.', body: 'cors, helmet, requestId, responseTime. Each one stamps the response as it passes: the Express API, running on Bun.' },
-      { tag: '03 · Honeycomb', title: `${lanes} lanes fold into one.`, body: 'That is compression. Thousands of records become one root on-chain, and any record can still prove it belongs.' },
-      { tag: '04 · kaput', title: 'Somebody sends SIGTERM.', body: 'The server stops taking new work, and everything already in flight still lands. Nothing drops.' },
+      {
+        tag: '00 · fibre',
+        title: 'You are light in a fibre.',
+        body: `The bright pulse is your request${city ? `, from ${city}` : ''}. The blocks on the wall are transistors, switching as traffic passes.`,
+      },
+      {
+        tag: '01 · hitlimit',
+        title: 'First gate: the rate limit.',
+        body: `A fixed window lets ${limit} requests a second through. The rest fall away with a 429, long before they reach anything expensive.`,
+      },
+      {
+        tag: '02 · bunWay',
+        title: 'Four films of middleware.',
+        body: 'cors, helmet, requestId, responseTime. Each one stamps the response as it passes: the Express API, running on Bun.',
+      },
+      {
+        tag: '03 · Honeycomb',
+        title: `${lanes} lanes fold into one.`,
+        body: 'That is compression. Thousands of records become one root on-chain, and any record can still prove it belongs.',
+      },
+      {
+        tag: '04 · kaput',
+        title: 'Somebody sends SIGTERM.',
+        body: 'The server stops taking new work, and everything already in flight still lands. Nothing drops.',
+      },
       { tag: '200 OK', title: 'You made it through.', body: 'So will your users. Keep scrolling to see how each piece works.' },
     ],
     hud: { inFlight: 'in flight', admitted: 'admitted', refused: 'turned away · 429' },
@@ -25,20 +45,55 @@ export const content = {
     done: '200 OK',
   },
   projects: {
-    hitlimit: { name: 'hitlimit', kind: 'Rate limiting', note: '8 stores, zero core dependencies',
-      vision: 'Rate limiting is the first thing a public API needs and the last thing anyone wants to write twice. hitlimit is one middleware for six frameworks and eight stores, with nothing else to install.' },
-    bunway: { name: 'bunWay', kind: 'A framework for Bun', note: '26 middleware, Express-compatible',
-      vision: 'Bun is fast, and most Node servers are written for Express. bunWay keeps the Express API, (req, res, next) and all, and runs it on Bun, so moving over is an import, not a rewrite.' },
-    state: { name: 'Honeycomb', kind: 'Web3 games on Solana', note: 'Compressed on-chain state, 1000× cheaper',
-      vision: 'Game studios want players to own what they earn, without every designer learning Solana. Honeycomb puts profiles, characters, resources and missions behind one API, and keeps that state on-chain for a thousandth of the cost.' },
-    kaput: { name: 'kaput', kind: 'Graceful shutdown', note: 'Send the signal. Watch it finish.',
-      vision: 'A deploy should never cost anyone their request. kaput hears the shutdown signal, stops taking new traffic, lets what is in flight finish, and closes every connection in the right order. One import.' },
-    scroller: { name: 'scroller', kind: 'Browser extension', note: 'Hands-free reading, Chrome and Firefox',
-      vision: 'Reading a long page shouldn’t need a hand on the wheel. Scroller moves any page at the pace you read, and remembers the speed you like on each site.' },
-    usher: { name: 'Usher', kind: 'Cinema SaaS', note: 'In progress · private',
-      vision: 'A cinema’s counters, gates and food stalls all have to agree with each other. Usher is one system for the lot, built so the database itself refuses to sell a seat twice.' },
-    quarry: { name: 'Quarry', kind: 'Lead intelligence', note: 'In progress · private',
-      vision: 'A list of businesses is not a list of leads. Quarry works out what each one is missing and what to sell them, and shows the evidence behind every point of the score.' },
+    hitlimit: {
+      name: 'hitlimit',
+      kind: 'Rate limiting',
+      note: '8 stores, zero core dependencies',
+      vision:
+        'Rate limiting is the first thing a public API needs and the last thing anyone wants to write twice. hitlimit is one middleware for six frameworks and eight stores, with nothing else to install.',
+    },
+    bunway: {
+      name: 'bunWay',
+      kind: 'A framework for Bun',
+      note: '26 middleware, Express-compatible',
+      vision:
+        'Bun is fast, and most Node servers are written for Express. bunWay keeps the Express API, (req, res, next) and all, and runs it on Bun, so moving over is an import, not a rewrite.',
+    },
+    state: {
+      name: 'Honeycomb',
+      kind: 'Web3 games on Solana',
+      note: 'Compressed on-chain state, 1000× cheaper',
+      vision:
+        'Game studios want players to own what they earn, without every designer learning Solana. Honeycomb puts profiles, characters, resources and missions behind one API, and keeps that state on-chain for a thousandth of the cost.',
+    },
+    kaput: {
+      name: 'kaput',
+      kind: 'Graceful shutdown',
+      note: 'Send the signal. Watch it finish.',
+      vision:
+        'A deploy should never cost anyone their request. kaput hears the shutdown signal, stops taking new traffic, lets what is in flight finish, and closes every connection in the right order. One import.',
+    },
+    scroller: {
+      name: 'scroller',
+      kind: 'Browser extension',
+      note: 'Hands-free reading, Chrome and Firefox',
+      vision:
+        'Reading a long page shouldn’t need a hand on the wheel. Scroller moves any page at the pace you read, and remembers the speed you like on each site.',
+    },
+    usher: {
+      name: 'Usher',
+      kind: 'Cinema SaaS',
+      note: 'In progress · private',
+      vision:
+        'A cinema’s counters, gates and food stalls all have to agree with each other. Usher is one system for the lot, built so the database itself refuses to sell a seat twice.',
+    },
+    quarry: {
+      name: 'Quarry',
+      kind: 'Lead intelligence',
+      note: 'In progress · private',
+      vision:
+        'A list of businesses is not a list of leads. Quarry works out what each one is missing and what to sell them, and shows the evidence behind every point of the score.',
+    },
   },
   /** Drafted from the facts in PRODUCT.md. TODO(Shayan): make each `vision` above sound like you. */
   /** The three on the main page, in order. Everything else lives behind "See all". */
@@ -59,7 +114,14 @@ export const content = {
     close: 'Close terminal',
     inputLabel: 'Command',
     logLabel: 'Terminal output',
-    greeting: ['A terminal, in a web page. It really runs what you type.', '', '  help (or --help)    every command, and what it does', '  ssh guest@shayan    log in to the portfolio: files, projects, a secret', '', 'Or press one of the suggestions under the prompt.'],
+    greeting: [
+      'A terminal, in a web page. It really runs what you type.',
+      '',
+      '  help (or --help)    every command, and what it does',
+      '  ssh guest@shayan    log in to the portfolio: files, projects, a secret',
+      '',
+      'Or press one of the suggestions under the prompt.',
+    ],
     placeholder: 'type a command',
     tryLabel: 'try',
   },
@@ -110,7 +172,7 @@ export const content = {
     alt: 'Shayan, seen from behind in a yellow hoodie, looking across a still mountain lake at dawn, snow peaks mirrored in the water under a pastel sky.',
   },
 
-  /** Journey stops (Sheets 01–07). Copy budget: one headline, one sentence, one real line of code. */
+  /** Project demos. Copy budget: one headline, one sentence, one real line of code. */
   stops: {
     sheetOf: 'of 08',
     detailsLabel: 'Spec sheet',
@@ -208,7 +270,8 @@ export const content = {
       sheet: '04',
       title: 'State',
       headline: 'Game state on-chain, for a thousandth of the cost.',
-      sentence: 'Honeycomb Protocol gives game developers Solana without the complexity: profiles, characters, resources, missions and staking behind one API. Its compression keeps that state in Merkle trees; your browser just built one from 4,096 example profiles. Check any of them against the root.',
+      sentence:
+        'Honeycomb Protocol gives game developers Solana without the complexity: profiles, characters, resources, missions and staking behind one API. Its compression keeps that state in Merkle trees; your browser just built one from 4,096 example profiles. Check any of them against the root.',
       // real line from src/lib/merkle.ts (verify)
       code: 'siblings.forEach((s, k) => (h = (index >> k) & 1 ? pair(s, h) : pair(h, s)))',
       condensing: 'Compressing 4,096 profiles…',
@@ -285,7 +348,14 @@ export const content = {
       top: 'Back to top',
       speedLabel: 'Speed',
       // the extension's own presets (extension/scripts/defaults.js)
-      presets: [['Too damn slow', 2], ['Slow', 12], ['Reading', 40], ['Brisk', 120], ['Fast', 500], ['Too damn fast', 3000]] as [string, number][],
+      presets: [
+        ['Too damn slow', 2],
+        ['Slow', 12],
+        ['Reading', 40],
+        ['Brisk', 120],
+        ['Fast', 500],
+        ['Too damn fast', 3000],
+      ] as [string, number][],
       modeLabel: 'Feel',
       modes: { smooth: 'Glide', step: 'Jumps', pages: 'Pages' },
       keys: 'Click the page, then: S start/stop · hold Shift to pause · [ ] slower, faster',
@@ -304,7 +374,8 @@ export const content = {
     usher: {
       headline: 'Sell one seat twice. Watch it refuse.',
       // GitHub description, ShayanHussainSB/usher, verbatim
-      sentence: 'Multi-tenant cinema management and ticketing SaaS for Pakistani cinemas: counter sales, QR tickets, gate scanning, food orders, cashier shifts.',
+      sentence:
+        'Multi-tenant cinema management and ticketing SaaS for Pakistani cinemas: counter sales, QR tickets, gate scanning, food orders, cashier shifts.',
       // real lines from packages/core/src/money.ts
       code: '/** Integer paisa; never a float. */\nexport type Paisa = number;',
       screen: 'Screen 1',
@@ -335,7 +406,8 @@ export const content = {
     quarry: {
       headline: 'A lead score that shows its working.',
       // README, Lead-Intelligence-Engine-GMaps @ dev/shayan, verbatim
-      sentence: "Finds local businesses, fills in what's known about them (contacts, owner, reviews, website, ads, domain, competitors) and scores them as sales leads for sellers of digital services. It reuses everything it already knows, so the same or a similar search never fetches the same data twice. Self-hosted, runs in Docker.",
+      sentence:
+        "Finds local businesses, fills in what's known about them (contacts, owner, reviews, website, ads, domain, competitors) and scores them as sales leads for sellers of digital services. It reuses everything it already knows, so the same or a similar search never fetches the same data twice. Self-hosted, runs in Docker.",
       // real line from engine/src/quarry/parse/scoring.py
       code: 'value = top[0] * 0.6 + top[1] * 0.25 + top[2] * 0.15',
       business: 'Kopi Corner · Café · Taman Molek, JB',
@@ -373,7 +445,15 @@ export const content = {
         business_email: 'email on an own domain',
         booking_ordering: 'online booking or ordering',
       } as Record<string, string>,
-      boostNames: { email: 'email', phone: 'phone', mobile: 'mobile', whatsapp: 'WhatsApp', ads: 'ads', reviews_50: '50+ reviews', reviews_200: '200+ reviews' } as Record<string, string>,
+      boostNames: {
+        email: 'email',
+        phone: 'phone',
+        mobile: 'mobile',
+        whatsapp: 'WhatsApp',
+        ads: 'ads',
+        reviews_50: '50+ reviews',
+        reviews_200: '200+ reviews',
+      } as Record<string, string>,
       penaltyNames: { no_contact: 'no contact', few_reviews: 'small place', closed_or_chain: 'closed' } as Record<string, string>,
       announce: (n: number, label: string) => `Priority ${n}, ${label}.`,
       details: [
@@ -397,12 +477,29 @@ export const content = {
         run: 'Run it',
         done: 'That is everything I was cleared to say. The rest he will tell you himself.',
         questions: [
-          { q: 'Why him?', a: 'Because he builds the part that cannot go down. Rate limiters, shutdown paths, on-chain state: the things nobody notices until they fail. Seven years of making sure nobody notices.' },
-          { q: 'Prove it.', a: 'Scroll up. hitlimit, Quarry and scroller are running in this tab right now. Not screenshots: the real code. Flood the limiter. I will wait.', link: { href: '#hitlimit', label: 'Go flood it' } },
-          { q: 'What has he shipped?', a: 'At Honeycomb: the generator that turns one schema into SDKs for the web, Unity, Unreal and Godot, on a protocol that keeps game state on-chain for a thousandth of the cost. At GameShift: the payment APIs games charge through. In the open: hitlimit, bunWay with its 2,423 tests, and kaput. Also three hackathon podiums, if you are counting.' },
+          {
+            q: 'Why him?',
+            a: 'Because he builds the part that cannot go down. Rate limiters, shutdown paths, on-chain state: the things nobody notices until they fail. Seven years of making sure nobody notices.',
+          },
+          {
+            q: 'Prove it.',
+            a: 'Scroll up. hitlimit, Quarry and scroller are running in this tab right now. Not screenshots: the real code. Flood the limiter. I will wait.',
+            link: { href: '#hitlimit', label: 'Go flood it' },
+          },
+          {
+            q: 'What has he shipped?',
+            a: 'At Honeycomb: the generator that turns one schema into SDKs for the web, Unity, Unreal and Godot, on a protocol that keeps game state on-chain for a thousandth of the cost. At GameShift: the payment APIs games charge through. In the open: hitlimit, bunWay with its 2,423 tests, and kaput. Also three hackathon podiums, if you are counting.',
+          },
           { q: 'Say that in Brainfuck.', a: 'Gladly. It is the only language where nobody argues about style.', code: 'HIRE' },
-          { q: 'Any secrets in here?', a: 'Three I will admit to. Press the ` key. Open the browser console. Read the response headers. There may be a fourth.' },
-          { q: 'Is he available?', a: 'Yes. Remote, anywhere, from Karachi at UTC+5. He answers email faster than I render.', link: { href: 'mail', label: 'Write to him' } },
+          {
+            q: 'Any secrets in here?',
+            a: 'Three I will admit to. Press the ` key. Open the browser console. Read the response headers. There may be a fourth.',
+          },
+          {
+            q: 'Is he available?',
+            a: 'Yes. Remote, anywhere, from Karachi at UTC+5. He answers email faster than I render.',
+            link: { href: 'mail', label: 'Write to him' },
+          },
         ] as { q: string; a: string; code?: 'HIRE'; link?: { href: string; label: string } }[],
       },
       statsLabel: 'The numbers behind it',
@@ -422,35 +519,50 @@ export const content = {
     },
   },
 
-  /** The chain journey after About: his Solana years as hash-linked blocks. Roles are his own words; no per-project claims beyond them. */
-  chain: {
-    kicker: 'The chain so far',
-    title: 'Four years on Solana.',
-    cta: 'Ask me about any block',
-    blockOf: (n: number, total: number, year: string) => `Block ${n} of ${total}, ${year}.`,
-    blocks: [
-      { year: '2020', headline: 'Genesis.', line: 'Freelance backends: a trading engine across 5+ exchanges, game servers under 50 ms.' },
-      { year: '2022', headline: 'Sol Patrol. NFTs, raffles, staking.', line: 'Where Honeycomb began. Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-solpatrol', alt: 'Sol Patrol artwork, from the collection’s public listing.' },
-      // TODO(Shayan): year inferred from Yawww/Hadeswap listings; confirm.
-      { year: '2022', headline: 'The Fracture.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-fracture', alt: 'The Fracture artwork, from the collection’s public listing.' },
-      { year: '2022', headline: 'BONK.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-bonk', alt: 'The BONK token logo.' },
-      { year: '2023', headline: 'Mad Lads.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-madlads', alt: 'Mad Lads artwork, from the collection’s public listing.' },
-      { year: '2022–26', headline: 'Games, on-chain.', line: 'Honeycomb: profiles, characters, missions and staking behind one API.' },
-      { year: '2023', headline: '1000× cheaper state.', line: 'Compressed accounts on the SVM: Borsh, zero-copy, Merkle roots.', href: '#all-state' },
-      { year: '2023', headline: 'Sandstorm. Grizzlython. Civic.', line: 'Three hackathon wins.' },
-      { year: 'now', headline: 'Head.', line: '10+ programs on mainnet. Zero security incidents.', cta: true },
-    ],
-    see: 'See the compression run',
-  },
-
   skipLink: 'Skip to content',
 } as const
 
 /** First-person Solana story. Interactive examples are labelled separately from shipped work. */
 export const journeyStory = [
-  { title: 'The art was the beginning.', text: 'I started with NFT communities. Behind the portraits, I built the smart contracts and full-stack experiences that gave people something to do with what they owned.', detail: 'Sol Patrol, The Fracture, BONK and Mad Lads are part of that chapter. My work spanned Anchor and Rust on-chain, with GraphQL, Node and React around it.', topic: 'NFT communities', mechanism: 'An asset has an identity, an owner and a life beyond its image.' },
-  { title: 'Ownership became a world.', text: 'Raffles and staking led me into on-chain games. At Honeycomb, I worked on the infrastructure for profiles, characters, resources and missions behind one API.', detail: 'A game should be able to send a character on a mission, track its state and return a reward without its designers having to become Solana engineers.', topic: 'Game infrastructure', mechanism: 'Build your party, pick a destination and bring back resources. Ownership stays with you while the mission changes the asset’s state.' },
-  { title: 'Scale the world. Shrink the cost.', text: 'More players mean more state. I worked on compressed accounts on the SVM: Borsh, zero-copy layouts and Merkle roots, keeping data verifiable while making it far cheaper to put on-chain.', detail: 'Honeycomb’s published profile benchmark drops from 0.0052100 to 0.0000041 SOL. The important part is keeping verification: alter a record and its proof must fail.', topic: 'State compression', mechanism: 'Fold 64 records into one root. Then change a record and see why its proof no longer fits.' },
-  { title: 'The chain needs a way back.', text: 'Writing a program is part of the job. Applications also need to find assets and react when their state changes. My work reaches into Rust, gRPC and digital asset tooling.', detail: 'Honeycomb’s compression pipeline emits state for an indexer, a fork of Metaplex’s Digital Asset Standard API. GameShift added aggregation, indexers, WebSockets and in-game payment APIs.', topic: 'Streams & indexing', mechanism: 'Request a level-up: backend → on-chain transaction → DAS → database → GraphQL refetch → client. Disconnect DAS to see indexing fall behind while transactions continue.' },
-  { title: 'Make the hard part usable.', text: 'I built Honeycomb’s GraphQL-to-SDK generator so one schema could reach web developers and teams building in Unity, Unreal Engine and Godot.', detail: 'That is the thread through my work: smart contracts, state, indexers and the developer tools that connect them. I build the systems other developers can build on.', topic: 'Developer tooling', mechanism: 'One schema, several language surfaces. These short examples illustrate the shape of typed SDK output.' },
+  {
+    title: 'The art was the beginning.',
+    text: 'I started with NFT communities. Behind the portraits, I built the smart contracts and full-stack experiences that gave people something to do with what they owned.',
+    detail:
+      'Sol Patrol, The Fracture, BONK and Mad Lads are part of that chapter. My work spanned Anchor and Rust on-chain, with GraphQL, Node and React around it.',
+    topic: 'NFT communities',
+    mechanism: 'An asset has an identity, an owner and a life beyond its image.',
+  },
+  {
+    title: 'Ownership became a world.',
+    text: 'Raffles and staking led me into on-chain games. At Honeycomb, I worked on the infrastructure for profiles, characters, resources and missions behind one API.',
+    detail:
+      'A game should be able to send a character on a mission, track its state and return a reward without its designers having to become Solana engineers.',
+    topic: 'Game infrastructure',
+    mechanism: 'Build your party, pick a destination and bring back resources. Ownership stays with you while the mission changes the asset’s state.',
+  },
+  {
+    title: 'Scale the world. Shrink the cost.',
+    text: 'More players mean more state. I worked on compressed accounts on the SVM: Borsh, zero-copy layouts and Merkle roots, keeping data verifiable while making it far cheaper to put on-chain.',
+    detail:
+      'Honeycomb’s published profile benchmark drops from 0.0052100 to 0.0000041 SOL. The important part is keeping verification: alter a record and its proof must fail.',
+    topic: 'State compression',
+    mechanism: 'Fold 64 records into one root. Then change a record and see why its proof no longer fits.',
+  },
+  {
+    title: 'The chain needs a way back.',
+    text: 'Writing a program is part of the job. Applications also need to find assets and react when their state changes. My work reaches into Rust, gRPC and digital asset tooling.',
+    detail:
+      'Honeycomb’s compression pipeline emits state for an indexer, a fork of Metaplex’s Digital Asset Standard API. GameShift added aggregation, indexers, WebSockets and in-game payment APIs.',
+    topic: 'Streams & indexing',
+    mechanism:
+      'Request a level-up: backend → on-chain transaction → DAS → database → GraphQL refetch → client. Disconnect DAS to see indexing fall behind while transactions continue.',
+  },
+  {
+    title: 'Make the hard part usable.',
+    text: 'I built Honeycomb’s GraphQL-to-SDK generator so one schema could reach web developers and teams building in Unity, Unreal Engine and Godot.',
+    detail:
+      'That is the thread through my work: smart contracts, state, indexers and the developer tools that connect them. I build the systems other developers can build on.',
+    topic: 'Developer tooling',
+    mechanism: 'One schema, several language surfaces. These short examples illustrate the shape of typed SDK output.',
+  },
 ] as const

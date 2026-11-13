@@ -13,7 +13,7 @@ interface Drop {
 }
 
 /**
- * Sheet 05: kaput. The visitor's traffic flows through a server that the real
+ * kaput. The visitor's traffic flows through a server that the real
  * kaput class manages; lift the cover, send SIGTERM, watch it drain to zero.
  * The kaput chunk (with its `process` shim) loads only when the sheet is reached.
  */
@@ -47,10 +47,13 @@ export function KaputStop() {
 
   // load + start traffic only while the sheet is on screen
   useEffect(() => {
-    const io = new IntersectionObserver(([e]) => {
-      setVisible(e.isIntersecting)
-      if (e.isIntersecting && !rig.current) void boot()
-    }, { threshold: 0.2 })
+    const io = new IntersectionObserver(
+      ([e]) => {
+        setVisible(e.isIntersecting)
+        if (e.isIntersecting && !rig.current) void boot()
+      },
+      { threshold: 0.2 },
+    )
     if (root.current) io.observe(root.current)
     return () => {
       io.disconnect()
@@ -85,7 +88,14 @@ export function KaputStop() {
 
   const s = rig.current?.stats()
   const gateClosed = phase !== 'serving'
-  const announce = phase === 'draining' ? k.announce.draining : phase === 'closing' ? k.announce.closing : phase === 'exited' && s ? k.announce.exited(s.served, s.dropped) : ''
+  const announce =
+    phase === 'draining'
+      ? k.announce.draining
+      : phase === 'closing'
+        ? k.announce.closing
+        : phase === 'exited' && s
+          ? k.announce.exited(s.served, s.dropped)
+          : ''
 
   return (
     <StopSheet
@@ -168,7 +178,14 @@ export function KaputStop() {
               </button>
             ) : (
               <>
-                <button type="button" className="btn" aria-expanded={cover} aria-controls="kaput-sigterm" onClick={() => setCover((c) => !c)} disabled={!loaded || gateClosed}>
+                <button
+                  type="button"
+                  className="btn"
+                  aria-expanded={cover}
+                  aria-controls="kaput-sigterm"
+                  onClick={() => setCover((c) => !c)}
+                  disabled={!loaded || gateClosed}
+                >
                   {cover ? k.coverDown : k.coverUp}
                 </button>
                 <button id="kaput-sigterm" type="button" className="btn kill" data-armed={cover} onClick={sigterm} disabled={!cover || gateClosed}>

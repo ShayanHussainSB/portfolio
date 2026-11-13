@@ -8,7 +8,7 @@ const PILE_COLS = 12
 const MAX_FLIGHTS = 6
 
 /**
- * Sheet 02: hitlimit. Every press goes through the real middleware. The vessel
+ * hitlimit. Every press goes through the real middleware. The vessel
  * holds the window's remaining requests; accepted requests fly down the route
  * (in the visitor's fringe), rejected ones fall below it and stay there.
  */

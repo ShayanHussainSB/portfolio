@@ -31,7 +31,11 @@ describe('runChain: the published bunway@1.1.0 middleware, in order', () => {
   })
 
   it('a layer that throws (no crypto.randomUUID) is reported; the rest still run', () => {
-    vi.stubGlobal('crypto', { randomUUID: () => { throw new Error('insecure context') } })
+    vi.stubGlobal('crypto', {
+      randomUUID: () => {
+        throw new Error('insecure context')
+      },
+    })
     const { headers, errors } = runChain(all(true), ORIGIN)
     expect(errors.requestId).toMatch(/insecure context/)
     expect(header(headers, 'Access-Control-Allow-Origin')).toBe('*')

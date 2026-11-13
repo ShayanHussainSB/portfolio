@@ -37,12 +37,18 @@ const label = (g: G, ink: Ink, text: string, x: number, y: number, align: Canvas
 
 /** hitlimit: requests reach a gate; a fixed window admits 5, then the rest bounce off until it resets. */
 const hitlimit: Scene = (g, w, h, t, ink) => {
-  const GAP = 0.42, TRAVEL = 1.4, WINDOW = 3.2, LIMIT = 5, CYCLE = 40
-  const gate = w * 0.56, y = h / 2
+  const GAP = 0.42,
+    TRAVEL = 1.4,
+    WINDOW = 3.2,
+    LIMIT = 5,
+    CYCLE = 40
+  const gate = w * 0.56,
+    y = h / 2
   const at = (k: number) => k * GAP + TRAVEL + rand(k) * 0.3 // when request k reaches the gate
   // replay a cycle's arrivals through the window (it opens on the first request after the last one expired)
   const replay = (c: number, until: number) => {
-    let start = -Infinity, count = 0
+    let start = -Infinity,
+      count = 0
     const ok = new Map<number, boolean>()
     for (let k = c * CYCLE; k < (c + 1) * CYCLE && at(k) <= until; k++) {
       if (at(k) - start >= WINDOW) (start = at(k)), (count = 0)
@@ -61,7 +67,8 @@ const hitlimit: Scene = (g, w, h, t, ink) => {
     g.fillStyle = ink.accent
     g.strokeStyle = ink.paper
     g.globalAlpha = 0.9
-    const sx = gate + 10 + i * 11, sy = 8
+    const sx = gate + 10 + i * 11,
+      sy = 8
     if (open && i < now.count) g.fillRect(sx, sy, 8, 8)
     else g.strokeRect(sx + 0.5, sy + 0.5, 7, 7)
   }
@@ -102,7 +109,8 @@ const bunway: Scene = (g, w, h, t, ink) => {
     g.lineWidth = 1
     g.strokeRect(fx - 5.5, 6.5, 11, h - 13)
   }
-  const GAP = 1.1, TRAVEL = 4.2
+  const GAP = 1.1,
+    TRAVEL = 4.2
   for (let k = Math.floor((t - TRAVEL) / GAP); k <= Math.floor(t / GAP); k++) {
     const x = ((t - k * GAP) / TRAVEL) * (w + 60) - 30
     const y = h / 2 + (rand(k) - 0.5) * h * 0.36
@@ -118,10 +126,13 @@ const bunway: Scene = (g, w, h, t, ink) => {
 
 /** Honeycomb: 16 leaves hash up to one root; each cycle one leaf's proof climbs, siblings marked. */
 const state: Scene = (g, w, h, t, ink) => {
-  const DEPTH = 4, CYCLE = 3.6
-  const c = Math.floor(t / CYCLE), u = (t % CYCLE) / CYCLE
+  const DEPTH = 4,
+    CYCLE = 3.6
+  const c = Math.floor(t / CYCLE),
+    u = (t % CYCLE) / CYCLE
   const leaf = Math.floor(rand(c) * 16)
-  const span = Math.min(w - 48, 520), x0 = (w - span) / 2
+  const span = Math.min(w - 48, 520),
+    x0 = (w - span) / 2
   const pos = (L: number, i: number) => {
     const n = 1 << L
     return { x: x0 + (span * (i * n + (n - 1) / 2)) / 15, y: h - 8 - (L * (h - 18)) / DEPTH }
@@ -130,7 +141,8 @@ const state: Scene = (g, w, h, t, ink) => {
   g.lineWidth = 1
   for (let L = 0; L < DEPTH; L++)
     for (let i = 0; i < 16 >> L; i++) {
-      const a = pos(L, i), b = pos(L + 1, i >> 1)
+      const a = pos(L, i),
+        b = pos(L + 1, i >> 1)
       g.globalAlpha = 0.22
       line(g, a.x, a.y, b.x, b.y)
     }
@@ -142,7 +154,9 @@ const state: Scene = (g, w, h, t, ink) => {
   }
   const reached = u * (DEPTH + 1.4)
   for (let L = 0; L < DEPTH && L < reached; L++) {
-    const a = pos(L, leaf >> L), b = pos(L + 1, leaf >> (L + 1)), sib = pos(L, (leaf >> L) ^ 1)
+    const a = pos(L, leaf >> L),
+      b = pos(L + 1, leaf >> (L + 1)),
+      sib = pos(L, (leaf >> L) ^ 1)
     const part = clamp(reached - L)
     g.globalAlpha = 1
     g.strokeStyle = ink.accent
@@ -169,8 +183,15 @@ const state: Scene = (g, w, h, t, ink) => {
 
 /** kaput: traffic flows into the server; SIGTERM closes the gate, in-flight work finishes, exit 0, dropped 0. */
 const kaput: Scene = (g, w, h, t, ink) => {
-  const CYCLE = 8, SIG = 4.6, CLOSE = SIG + 2.8, GAP = 0.22
-  const gate = w * 0.32, bx = w * 0.6, bw = Math.min(140, w * 0.2), by = 8, bh = h - 16
+  const CYCLE = 8,
+    SIG = 4.6,
+    CLOSE = SIG + 2.8,
+    GAP = 0.22
+  const gate = w * 0.32,
+    bx = w * 0.6,
+    bw = Math.min(140, w * 0.2),
+    by = 8,
+    bh = h - 16
   const u = t % CYCLE
   const closed = u >= SIG
   g.lineWidth = closed ? 3 : 1.5
@@ -190,7 +211,10 @@ const kaput: Scene = (g, w, h, t, ink) => {
     label(g, ink, 'exit 0 · dropped 0', bx + bw + 10, h / 2 + 3)
   }
   for (let k = Math.floor((t - 4) / GAP); k <= Math.floor(t / GAP); k++) {
-    const s = k * GAP, c = Math.floor(s / CYCLE), us = s - c * CYCLE, ru = t - c * CYCLE
+    const s = k * GAP,
+      c = Math.floor(s / CYCLE),
+      us = s - c * CYCLE,
+      ru = t - c * CYCLE
     if (us >= CLOSE - 0.6) continue // the restart: nothing sent while the server is down
     const age = ru - us
     const y = h / 2 + (rand(k) - 0.5) * (h - 26)
@@ -219,8 +243,11 @@ const kaput: Scene = (g, w, h, t, ink) => {
 
 /** scroller: a strip of panels glides, eases to a rest and glides on, like the extension's ramp. */
 const scroller: Scene = (g, w, h, t, ink) => {
-  const CYCLE = 4.4, GLIDE = 3.2, STEP = 240
-  const c = Math.floor(t / CYCLE), u = t % CYCLE
+  const CYCLE = 4.4,
+    GLIDE = 3.2,
+    STEP = 240
+  const c = Math.floor(t / CYCLE),
+    u = t % CYCLE
   const moving = u < GLIDE
   const pos = c * STEP + STEP * smooth(u / GLIDE)
   const widths = Array.from({ length: 12 }, (_, i) => 70 + rand(i + 40) * 90)
@@ -228,7 +255,8 @@ const scroller: Scene = (g, w, h, t, ink) => {
   let x = -(pos % total)
   g.strokeStyle = ink.paper
   g.lineWidth = 1.5
-  const top = 8, ph = h - 16
+  const top = 8,
+    ph = h - 16
   for (let pass = 0; x < w; pass++)
     for (let i = 0; i < widths.length && x < w; i++) {
       const pw = widths[i]
@@ -248,7 +276,9 @@ const scroller: Scene = (g, w, h, t, ink) => {
       x += pw + 12
     }
   // the extension's pill: a red dot while it scrolls (scroller's hue is that red)
-  const pw = 92, px = w - pw - 10, py = h / 2 - 11
+  const pw = 92,
+    px = w - pw - 10,
+    py = h / 2 - 11
   g.globalAlpha = 1
   g.fillStyle = '#000'
   g.beginPath()
@@ -264,9 +294,14 @@ const scroller: Scene = (g, w, h, t, ink) => {
 
 /** Usher: tickets fill seats one by one; every fourth tries a seat that's already sold and bounces. */
 const usher: Scene = (g, w, h, t, ink) => {
-  const N = 16, CYCLE = 13, GAP = 0.7, FLY = 0.5
-  const c = Math.floor(t / CYCLE), u = t % CYCLE
-  const size = Math.min(18, (w - 80) / 19), gap = size * 0.3
+  const N = 16,
+    CYCLE = 13,
+    GAP = 0.7,
+    FLY = 0.5
+  const c = Math.floor(t / CYCLE),
+    u = t % CYCLE
+  const size = Math.min(18, (w - 80) / 19),
+    gap = size * 0.3
   const rowW = N * size + (N - 1) * gap + size
   const sx = (i: number) => (w - rowW) / 2 + i * (size + gap) + (i >= N / 2 ? size : 0)
   const sy = h * 0.22
@@ -299,8 +334,10 @@ const usher: Scene = (g, w, h, t, ink) => {
   for (const a of attempts) {
     const s = u - a.at
     if (s < 0) continue
-    const tx = sx(a.seat) + size / 2, ty = sy + size / 2
-    const fx = w / 2, fy = h + 4
+    const tx = sx(a.seat) + size / 2,
+      ty = sy + size / 2
+    const fx = w / 2,
+      fy = h + 4
     if (s < FLY) {
       g.globalAlpha = 1
       g.fillStyle = a.ok ? ink.paper : ink.fault
@@ -310,7 +347,8 @@ const usher: Scene = (g, w, h, t, ink) => {
       g.globalAlpha = clamp(1 - b / 0.8)
       g.strokeStyle = ink.fault
       g.lineWidth = 2
-      const cx = tx, cy = ty + size + 4 + b * 10
+      const cx = tx,
+        cy = ty + size + 4 + b * 10
       line(g, cx - 4, cy - 4, cx + 4, cy + 4)
       line(g, cx + 4, cy - 4, cx - 4, cy + 4)
     }
@@ -320,14 +358,18 @@ const usher: Scene = (g, w, h, t, ink) => {
 
 /** Quarry: a sweep scores map dots (Hot, Warm, Cold); dots it already knows are reused, not fetched again. */
 const quarry: Scene = (g, w, h, t, ink) => {
-  const CYCLE = 5, SWEEP = 3.2
-  const c = Math.floor(t / CYCLE), u = t % CYCLE, round = c % 3
+  const CYCLE = 5,
+    SWEEP = 3.2
+  const c = Math.floor(t / CYCLE),
+    u = t % CYCLE,
+    round = c % 3
   const present = 30 + 8 * round
   const known = round === 0 ? 0 : 30 + 8 * (round - 1)
   const sweep = (u / SWEEP) * (w + 20) - 10
   let fetched = 0
   for (let i = 0; i < present; i++) {
-    const x = 16 + rand(i) * (w - 120), y = 8 + rand(i + 500) * (h - 16)
+    const x = 16 + rand(i) * (w - 120),
+      y = 8 + rand(i + 500) * (h - 16)
     const score = rand(i + 900)
     const scored = i < known || x <= sweep
     if (!scored) {

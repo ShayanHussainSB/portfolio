@@ -1,7 +1,24 @@
 import { useEffect, useRef } from 'react'
 import {
-  CanvasTexture, CapsuleGeometry, Color, ConeGeometry, CylinderGeometry, DirectionalLight, ExtrudeGeometry, Group, HemisphereLight, Mesh,
-  MeshStandardMaterial, Object3D, PerspectiveCamera, Scene, Shape, SphereGeometry, SRGBColorSpace, TorusGeometry, WebGLRenderer,
+  CanvasTexture,
+  CapsuleGeometry,
+  Color,
+  ConeGeometry,
+  CylinderGeometry,
+  DirectionalLight,
+  ExtrudeGeometry,
+  Group,
+  HemisphereLight,
+  Mesh,
+  MeshStandardMaterial,
+  Object3D,
+  PerspectiveCamera,
+  Scene,
+  Shape,
+  SphereGeometry,
+  SRGBColorSpace,
+  TorusGeometry,
+  WebGLRenderer,
 } from 'three'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { ICONS } from '../lib/icons'
@@ -22,7 +39,8 @@ const ball = (r: number, m: MeshStandardMaterial, sx = 1, sy = 1, sz = 1) => {
   b.scale.set(sx, sy, sz)
   return b
 }
-const slab = (w: number, h: number, d: number, m: MeshStandardMaterial, r = 0.12) => new Mesh(new RoundedBoxGeometry(w, h, d, 5, Math.min(r, w / 2, h / 2, d / 2)), m)
+const slab = (w: number, h: number, d: number, m: MeshStandardMaterial, r = 0.12) =>
+  new Mesh(new RoundedBoxGeometry(w, h, d, 5, Math.min(r, w / 2, h / 2, d / 2)), m)
 /** An arm that swings from its shoulder. */
 const arm = (m: MeshStandardMaterial, x: number, y: number) => {
   const pivot = at(new Group(), x, y, 0)
@@ -54,13 +72,29 @@ function badge(path: string, ground: string, ink: string) {
 
 /** A round little creature: body, big head, eyes that blink, cheeks, a smile, two arms, two feet. */
 function buddy(color: string, belly: string) {
-  const skin = clay(color), white = clay('#ffffff', 0.3), dark = clay('#15151f', 0.25)
-  const g = new Group(), head = at(new Group(), 0, 0.55, 0), eyes = new Group()
-  for (const x of [-0.27, 0.27]) eyes.add(at(ball(0.19, white, 1, 1.15, 0.55), x, 0.06, 0.6), at(ball(0.1, dark, 1, 1.15, 0.6), x * 0.96, 0.05, 0.69), at(ball(0.035, white), x * 0.96 + 0.035, 0.1, 0.75))
+  const skin = clay(color),
+    white = clay('#ffffff', 0.3),
+    dark = clay('#15151f', 0.25)
+  const g = new Group(),
+    head = at(new Group(), 0, 0.55, 0),
+    eyes = new Group()
+  for (const x of [-0.27, 0.27])
+    eyes.add(
+      at(ball(0.19, white, 1, 1.15, 0.55), x, 0.06, 0.6),
+      at(ball(0.1, dark, 1, 1.15, 0.6), x * 0.96, 0.05, 0.69),
+      at(ball(0.035, white), x * 0.96 + 0.035, 0.1, 0.75),
+    )
   const smile = at(new Mesh(new TorusGeometry(0.1, 0.028, 10, 20, Math.PI), dark), 0, -0.17, 0.66)
   smile.rotation.z = Math.PI
-  head.add(ball(0.74, skin, 1.08, 0.94, 1), eyes, smile, at(ball(0.1, clay('#ff9a9a'), 1, 0.6, 0.4), -0.5, -0.12, 0.52), at(ball(0.1, clay('#ff9a9a'), 1, 0.6, 0.4), 0.5, -0.12, 0.52))
-  const left = arm(skin, -0.58, -0.12), right = arm(skin, 0.58, -0.12)
+  head.add(
+    ball(0.74, skin, 1.08, 0.94, 1),
+    eyes,
+    smile,
+    at(ball(0.1, clay('#ff9a9a'), 1, 0.6, 0.4), -0.5, -0.12, 0.52),
+    at(ball(0.1, clay('#ff9a9a'), 1, 0.6, 0.4), 0.5, -0.12, 0.52),
+  )
+  const left = arm(skin, -0.58, -0.12),
+    right = arm(skin, 0.58, -0.12)
   left.rotation.z = -0.35
   right.rotation.z = 0.35
   g.add(at(ball(0.6, skin, 1, 1.05, 0.9), 0, -0.4, 0), at(ball(0.42, clay(belly), 1, 1.05, 0.5), 0, -0.42, 0.36), head, left, right)
@@ -80,11 +114,12 @@ function cast(): { g: Group; act: Act }[] {
     ear.rotation.z = -x * 0.5
     cat.head.add(ear, at(ball(0.11, clay('#ffb3c7'), 1, 1.3, 0.5), x * 0.98, 0.6, 0.1))
   }
-  for (const x of [-1, 1]) for (const k of [-1, 1]) {
-    const w = at(new Mesh(new CylinderGeometry(0.012, 0.012, 0.6, 6), clay('#ffffff')), x * 0.92, -0.1 + k * 0.07, 0.4)
-    w.rotation.z = Math.PI / 2 + x * k * 0.16
-    cat.head.add(w)
-  }
+  for (const x of [-1, 1])
+    for (const k of [-1, 1]) {
+      const w = at(new Mesh(new CylinderGeometry(0.012, 0.012, 0.6, 6), clay('#ffffff')), x * 0.92, -0.1 + k * 0.07, 0.4)
+      w.rotation.z = Math.PI / 2 + x * k * 0.16
+      cat.head.add(w)
+    }
   const tail = at(new Group(), 0.3, -0.75, -0.35)
   const curl = new Mesh(new TorusGeometry(0.42, 0.1, 12, 28, Math.PI * 1.15), cat.skin)
   curl.rotation.y = Math.PI / 2
@@ -117,8 +152,10 @@ function cast(): { g: Group; act: Act }[] {
     inn.rotation.y = 0.35 + Math.sin(t * 1.1) * 0.3 + x * 4
   }
   // JointOps: an open parcel, with three packages (hitlimit, bunWay, kaput) bobbing out of it
-  const card = clay('#e2a12a'), parcel = new Group()
-  const lidL = at(new Group(), -0.9, 0.45, 0), lidR = at(new Group(), 0.9, 0.45, 0)
+  const card = clay('#e2a12a'),
+    parcel = new Group()
+  const lidL = at(new Group(), -0.9, 0.45, 0),
+    lidR = at(new Group(), 0.9, 0.45, 0)
   lidL.add(at(slab(0.9, 0.1, 1.5, card, 0.05), -0.45, 0, 0))
   lidR.add(at(slab(0.9, 0.1, 1.5, card, 0.05), 0.45, 0, 0))
   const pkgs = ['#b688ff', '#72a3fe', '#06c281'].map((c, i) => at(slab(0.5, 0.5, 0.5, clay(c), 0.12), (i - 1) * 0.55, 0.5, (i % 2) * 0.3 - 0.15))
@@ -134,7 +171,8 @@ function cast(): { g: Group; act: Act }[] {
     })
   }
   // Email: an open envelope; the letter rides up out of it, and an @ badge bobs above
-  const blue = clay('#5b6ee8'), paler = clay('#7d8df2')
+  const blue = clay('#5b6ee8'),
+    paler = clay('#7d8df2')
   const tri = (pts: [number, number][], m: MeshStandardMaterial, depth: number) => {
     const s = new Shape()
     pts.forEach(([x, y], i) => (i ? s.lineTo(x, y) : s.moveTo(x, y)))
@@ -142,13 +180,46 @@ function cast(): { g: Group; act: Act }[] {
     return new Mesh(new ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelSize: 0.06, bevelThickness: 0.06, bevelSegments: 4 }), m)
   }
   const letter = new Group()
-  letter.add(slab(1.7, 1.3, 0.08, clay('#f4f4f1'), 0.04), at(slab(1.2, 0.14, 0.04, clay('#ff9d4d'), 0.02), 0, 0.2, 0.05), at(slab(1.2, 0.14, 0.04, clay('#ff9d4d'), 0.02), 0, -0.08, 0.05), at(slab(0.7, 0.14, 0.04, clay('#ffc48f'), 0.02), -0.25, -0.36, 0.05))
+  letter.add(
+    slab(1.7, 1.3, 0.08, clay('#f4f4f1'), 0.04),
+    at(slab(1.2, 0.14, 0.04, clay('#ff9d4d'), 0.02), 0, 0.2, 0.05),
+    at(slab(1.2, 0.14, 0.04, clay('#ff9d4d'), 0.02), 0, -0.08, 0.05),
+    at(slab(0.7, 0.14, 0.04, clay('#ffc48f'), 0.02), -0.25, -0.36, 0.05),
+  )
   const env = new Group()
   env.add(
     at(slab(2.2, 1.4, 0.16, blue, 0.08), 0, 0, -0.16), // back
-    at(tri([[-1.1, 0], [1.1, 0], [0, 0.95]], blue, 0.08), 0, 0.66, -0.24), // the open flap, standing up behind
+    at(
+      tri(
+        [
+          [-1.1, 0],
+          [1.1, 0],
+          [0, 0.95],
+        ],
+        blue,
+        0.08,
+      ),
+      0,
+      0.66,
+      -0.24,
+    ), // the open flap, standing up behind
     letter,
-    at(tri([[-1.1, -0.7], [1.1, -0.7], [1.1, 0.62], [0, -0.12], [-1.1, 0.62]], paler, 0.1), 0, 0, 0.1), // the pocket, in front
+    at(
+      tri(
+        [
+          [-1.1, -0.7],
+          [1.1, -0.7],
+          [1.1, 0.62],
+          [0, -0.12],
+          [-1.1, 0.62],
+        ],
+        paler,
+        0.1,
+      ),
+      0,
+      0,
+      0.1,
+    ), // the pocket, in front
   )
   const mailAll = new Group()
   mailAll.add(at(env, 0, -0.35, 0), pool('#232a66'))
@@ -222,7 +293,8 @@ export default function Mascots() {
         a.g.rotation.y = -0.3 + Math.sin(t * 0.6 + i) * 0.22
         xt[i] += excited[i] * dt
         a.act(t, excited[i], xt[i])
-        const x = s.left - r.left, y = r.bottom - s.bottom
+        const x = s.left - r.left,
+          y = r.bottom - s.bottom
         renderer.setViewport(x, y, s.width, s.height)
         renderer.setScissor(x, y, s.width, s.height)
         camera.aspect = s.width / s.height
@@ -246,7 +318,8 @@ export default function Mascots() {
       if (i >= 0) excited[i] = 1
     }
     list.addEventListener('pointerdown', press)
-    let raf = 0, onScreen = false
+    let raf = 0,
+      onScreen = false
     const frame = (now: number) => {
       draw(now / 1000)
       raf = onScreen && !document.hidden ? requestAnimationFrame(frame) : 0

@@ -13,7 +13,7 @@ interface Tree {
 }
 
 /**
- * Sheet 04: State. 4,096 example profiles compress into one Keccak-256 root in
+ * Honeycomb state compression. 4,096 example profiles compress into one Keccak-256 root in
  * the visitor's browser; any profile verifies against it with 12 sibling hashes.
  */
 export function StateStop() {
@@ -148,7 +148,17 @@ export function StateStop() {
 }
 
 /** The proof, drawn as a ladder: your path climbs on the left, each rung's sibling hash on the right. */
-function Ladder({ proof, rootHash, ok, index }: { proof: { index: number; siblings: Uint8Array[] } | null; rootHash?: Uint8Array; ok: boolean; index: number }) {
+function Ladder({
+  proof,
+  rootHash,
+  ok,
+  index,
+}: {
+  proof: { index: number; siblings: Uint8Array[] } | null
+  rootHash?: Uint8Array
+  ok: boolean
+  index: number
+}) {
   const t = content.stops.state
   const rows = DEPTH + 1
   const y = (k: number) => 268 - k * 19 // k = 0 (record) … DEPTH (root)
@@ -166,7 +176,14 @@ function Ladder({ proof, rootHash, ok, index }: { proof: { index: number; siblin
         </linearGradient>
       </defs>
       {!ok && <rect x="14" y={y(DEPTH) - 6} width="20" height={y(0) - y(DEPTH) + 12} fill="url(#ladder-hatch)" />}
-      <line x1="24" y1={y(0)} x2="24" y2={y(DEPTH)} className={ok ? 'ladder__path' : 'ladder__path ladder__path--fault'} stroke={ok ? 'url(#ladder-fringe)' : undefined} />
+      <line
+        x1="24"
+        y1={y(0)}
+        x2="24"
+        y2={y(DEPTH)}
+        className={ok ? 'ladder__path' : 'ladder__path ladder__path--fault'}
+        stroke={ok ? 'url(#ladder-fringe)' : undefined}
+      />
       {proof?.siblings.map((s, k) => (
         <g key={`${proof.index}-${k}`} className="rung" style={{ '--k': k } as CSSProperties}>
           <circle cx="24" cy={y(k)} r="3.5" className="ladder__node" />
