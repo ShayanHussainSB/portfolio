@@ -422,5 +422,26 @@ export const content = {
     },
   },
 
+  /** The chain journey after About: his Solana years as hash-linked blocks. Roles are his own words; no per-project claims beyond them. */
+  chain: {
+    kicker: 'The chain so far',
+    title: 'Four years on Solana.',
+    cta: 'Ask me about any block',
+    blockOf: (n: number, total: number, year: string) => `Block ${n} of ${total}, ${year}.`,
+    blocks: [
+      { year: '2020', headline: 'Genesis.', line: 'Freelance backends: a trading engine across 5+ exchanges, game servers under 50 ms.' },
+      { year: '2022', headline: 'Sol Patrol. NFTs, raffles, staking.', line: 'Where Honeycomb began. Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-solpatrol', alt: 'Sol Patrol artwork, from the collection’s public listing.' },
+      // TODO(Shayan): year inferred from Yawww/Hadeswap listings; confirm.
+      { year: '2022', headline: 'The Fracture.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-fracture', alt: 'The Fracture artwork, from the collection’s public listing.' },
+      { year: '2022', headline: 'BONK.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-bonk', alt: 'The BONK token logo.' },
+      { year: '2023', headline: 'Mad Lads.', line: 'Smart contracts in Anchor/Rust. Full stack in GraphQL, Node, React.', art: 'chain-madlads', alt: 'Mad Lads artwork, from the collection’s public listing.' },
+      { year: '2022–26', headline: 'Games, on-chain.', line: 'Honeycomb: profiles, characters, missions and staking behind one API.' },
+      { year: '2023', headline: '1000× cheaper state.', line: 'Compressed accounts on the SVM: Borsh, zero-copy, Merkle roots.', href: '#all-state' },
+      { year: '2023', headline: 'Sandstorm. Grizzlython. Civic.', line: 'Three hackathon wins.' },
+      { year: 'now', headline: 'Head.', line: '10+ programs on mainnet. Zero security incidents.', cta: true },
+    ],
+    see: 'See the compression run',
+  },
+
   skipLink: 'Skip to content',
 } as const

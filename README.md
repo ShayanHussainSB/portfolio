@@ -125,3 +125,8 @@ sips -s format jpeg -s formatOptions 78 src/assets/photos/portrait-800.webp --ou
 | `horizon`, `horizon-wide` | IMG_5507 | Contact, printed in blue |
 | `portrait` | IMG_0530 | About, printed in blue |
 | `offcall` | IMG_5346 | kaput, after exit 0 |
+| `chain-solpatrol` | Sol Patrol #3323 (HowRare rank 1), arweave.net/6m345RawbnSFXagmMvSlG4I0hPwQJUoWhABHCK4ZBEg | Chain journey |
+| `chain-madlads` | Mad Lads #8420 (HowRare rank 1), madlads.s3.us-west-2.amazonaws.com/images/8420.png, square crop from y=120 | Chain journey |
+| `chain-bonk` | BONK token icon via Jupiter token API (256px only, so a single size) | Chain journey |
+
+Chain art is optional: a block whose `chain-<id>` files are missing renders as type only (The Fracture, until an image is added).
