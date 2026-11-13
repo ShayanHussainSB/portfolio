@@ -34,7 +34,7 @@ export function ChainJourney({ctaHref}:{ctaHref:string}) {
             <div className="journey__outro-content"><p>From on-chain worlds to the systems behind every request.</p><h2><span>What’s</span> <span>next?</span></h2><p>The same thinking. A different kind of traffic.</p><a href="#work">Meet hitlimit <span aria-hidden="true">↓</span></a><div className="journey__handoff" aria-hidden="true"><i/><i/><i/><i/><i/><b>200</b></div></div>
           </article>
         </div>
-        <div className="journey__footer"><span>{layers[current]}</span>{motion&&flight&&<span className="journey__animation-hint">Hover to open · click to follow a transaction</span>}</div>
+        <div className="journey__footer"><span>{layers[current]}</span>{motion&&flight&&<span className="journey__animation-hint">Click to send a transaction</span>}</div>
       </div>
     </div>
   </section>

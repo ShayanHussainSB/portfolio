@@ -6,9 +6,11 @@ A first-person story of Shayan's Solana work, placed between EdgeStop and featur
 
 ## Visual structure
 
-The opening presents a gallery of public NFT portraits. The surface artwork fades before the ownership chapter. From ownership onward, the full-screen flight follows a curved sequence of softly lit blocks with one connecting path. Each block has records, a hash and a previous hash; these example hashes are computed by the existing chain helper. It is an illustrative ledger, not live Solana data.
+The opening presents a gallery of public NFT portraits, floating at the mouth of a tunnel. As the visitor goes deeper the portraits drift out onto the wall and fade while a winding tunnel forms around them, in the spirit of the banner's fibre flight: strands twisting down the wall, ribs marking distance, dust, and transactions streaking past. Each chapter's stretch of tunnel has its own hue.
 
-The camera follows the chain without rolling. The ledger remains in the full-screen environment behind the narration. The side-view strip was removed at the user's request. The rest of the page is deliberately quiet. The earlier dense wall tiles, racks, floating grids, wire frames, dust and branching scenery have been removed. Shared geometry/material resources are disposed once.
+The blockchain lives in the wall. Short chains of linked blocks sit on it, their record plates switching on and off. Twelve block rings span the tunnel: as the camera nears, each ring fills with records, seals and flashes; its label shows its hash and the previous block's (computed by the existing chain helper). It is an illustrative ledger, not live Solana data.
+
+The camera follows the curve without rolling. The outro fades the wall detail and keeps only faint tunnel lines behind its heading. Shared geometry/material resources are disposed once.
 
 ## Chapters and interactions
 
@@ -35,7 +37,7 @@ Validation covers typecheck, the existing test suite, SSR/prerender build, deskt
 
 ## Animated block lifecycle
 
-The slides and existing examples stay intact. Hovering a block opens its records; clicking the exposed canvas or pressing Enter while the canvas is focused starts an illustrative transaction sequence. Records arrive, a validation sweep passes, the body closes/seals, and a packet travels to the next block’s previous-hash reference. The sequence also plays on entry into each deeper chapter. Labels and hashes are rendered on the blocks; no new slide panels or visible controls are added. Canvas interaction has a keyboard equivalent and announces stages to assistive technology.
+Block rings seal on their own as the camera approaches (pending → collecting n/28 → sealed). Clicking the canvas, or pressing Enter while it is focused, sends an example transaction packet down the tunnel to the next ring ahead, which flashes on arrival; each stage is announced to assistive technology. No new slide panels or visible controls are added.
 
 ## SDK schema playground
 

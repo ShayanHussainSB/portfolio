@@ -1,22 +1,36 @@
 import { useEffect, useRef } from 'react'
 import {
-  BoxGeometry, CanvasTexture, CatmullRomCurve3, Color, DirectionalLight, DoubleSide,
-  Fog, Group, HemisphereLight, Line, LineBasicMaterial, BufferGeometry,
-  Mesh, MeshBasicMaterial, MeshStandardMaterial, PerspectiveCamera, PlaneGeometry,
-  Raycaster, Scene, SphereGeometry, SRGBColorSpace, Texture, TextureLoader, TubeGeometry,
-  Vector2, Vector3, WebGLRenderer,
+  BoxGeometry, BufferAttribute, BufferGeometry, CanvasTexture, CatmullRomCurve3, Color, DoubleSide, Fog,
+  HemisphereLight, InstancedMesh, LineBasicMaterial, LineSegments, Material, Mesh, MeshBasicMaterial, MeshLambertMaterial,
+  Object3D, PerspectiveCamera, PlaneGeometry, PointLight, Points, PointsMaterial, Scene, SphereGeometry, SRGBColorSpace,
+  Texture, TextureLoader, TorusGeometry, Vector3, WebGLRenderer,
 } from 'three'
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js'
 import { progress } from '../lib/scroll'
 import { link, short } from '../lib/chain'
 
 const files = import.meta.glob('../assets/photos/journey-*.jpg', { eager: true, query: '?url', import: 'default' }) as Record<string, string>
-const ledger = link(Array.from({ length: 9 }, (_, i) => ({ year: 'Example', headline: `Block ${i + 1}`, line: 'Illustrative ledger records' })))
+const RINGS = 12
+const ledger = link(Array.from({ length: RINGS }, (_, i) => ({ year: 'Example', headline: `Block ${i + 1}`, line: 'Illustrative ledger records' })))
+const R = 8 // tunnel radius
+const N = 1200 // route samples
+const RECORDS = 28 // records per block ring
+const ringT = ledger.map((_, i) => .2 + i * .06)
+// one hue per chapter stretch: collections, ownership, compression, indexing, tooling, next
+const HUES = ['#f2c66d', '#ff9a6b', '#b48cff', '#58c8f2', '#7ef0b0', '#a0f1d0'].map(h => new Color(h))
+const clamp = (x: number) => Math.min(1, Math.max(0, x))
+const smooth = (x: number) => (x = clamp(x), x * x * (3 - 2 * x))
+const mix = (a: number, b: number, t: number) => a + (b - a) * t
+const rnd = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x) }
+const zone = (t: number) => HUES[Math.min(5, Math.max(0, Math.round((t - .001) / .9 * 5)))]
 
-/** One linked ledger in a quiet space. The camera follows its curve without rolling. */
+/**
+ * The Solana story as a flight: NFT portraits at the mouth, then a winding tunnel builds around them,
+ * its wall carrying chained blocks, records and traffic. Block rings fill with records and seal as the
+ * camera nears; each label shows its hash and the previous block's. Illustrative, not live chain data.
+ */
 export default function JourneyFlight({ onFail, theme }: { onFail: () => void; theme: 'light' | 'dark' | 'darker' }) {
   const ref = useRef<HTMLCanvasElement>(null)
-  const statusRef=useRef<HTMLSpanElement>(null)
+  const statusRef = useRef<HTMLSpanElement>(null)
   const themeRef = useRef(theme)
   themeRef.current = theme
 
@@ -28,158 +42,176 @@ export default function JourneyFlight({ onFail, theme }: { onFail: () => void; t
       renderer = new WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' })
     } catch { onFail(); return }
     renderer.outputColorSpace = SRGBColorSpace
-    renderer.autoClear = false
     const scene = new Scene()
     const background = new Color(0xeaf2ef), targetBackground = new Color(0xeaf2ef)
-    scene.fog = new Fog(background, 25, 85)
-    const camera = new PerspectiveCamera(58, 1, .5, 100)
+    scene.fog = new Fog(background, 16, 80)
+    const camera = new PerspectiveCamera(58, 1, .3, 120)
+    const say = (text: string) => { if (statusRef.current) statusRef.current.textContent = text }
+
+    // ---- the route: a winding curve, sampled once so per-frame lookups allocate nothing
     const route = new CatmullRomCurve3([
-      new Vector3(0, 0, 12), new Vector3(0, -1, -20), new Vector3(12, -5, -65),
-      new Vector3(-9, -13, -115), new Vector3(11, -21, -170),
-      new Vector3(-6, -29, -230), new Vector3(0, -35, -280),
+      new Vector3(0, 0, 12), new Vector3(0, -1, -20), new Vector3(14, -6, -65),
+      new Vector3(-10, -14, -115), new Vector3(12, -22, -170),
+      new Vector3(-8, -30, -230), new Vector3(4, -36, -285), new Vector3(0, -38, -320),
     ])
-    const frames = route.computeFrenetFrames(400, false)
-    const at = (t: number, x = 0, y = 0) => {
-      t = Math.max(0, Math.min(.999, t))
-      const k = Math.round(t * 400)
-      return route.getPointAt(t).addScaledVector(frames.normals[k], x).addScaledVector(frames.binormals[k], y)
+    const LEN = route.getLength()
+    const pts = route.getSpacedPoints(N)
+    const { normals, binormals, tangents } = route.computeFrenetFrames(N, false)
+    const at = (t: number, x = 0, y = 0, out = new Vector3()) => {
+      const f = clamp(t) * N, i = Math.min(N - 1, Math.floor(f))
+      return out.lerpVectors(pts[i], pts[i + 1], f - i).addScaledVector(normals[i], x).addScaledVector(binormals[i], y)
     }
-    scene.add(new HemisphereLight(0xe3f3ff, 0x152335, 2.6))
-    const key = new DirectionalLight(0xcdf7ee, 2.1)
-    key.position.set(-6, 12, 10)
-    scene.add(key, key.target)
-    const fill = new DirectionalLight(0xadc4ff, 1.3)
-    fill.position.set(8, -2, -10)
-    scene.add(fill, fill.target)
+    const wall = (t: number, a: number, r = R, out?: Vector3) => at(t, Math.cos(a) * r, Math.sin(a) * r, out)
+    const o = new Object3D(), v = new Vector3()
+    // a wall-mounted transform: local +z faces the axis, local y runs along the tunnel
+    const onWall = (t: number, a: number, r: number) => {
+      wall(t, a, r, o.position)
+      o.up.copy(tangents[Math.round(clamp(t) * N)])
+      o.lookAt(at(t, 0, 0, v))
+      o.updateMatrix()
+      return o.matrix
+    }
+    const lamp = new PointLight(0xffffff, 160, 45, 1.6) // rides with the camera: near detail lit, far detail in fog
+    scene.add(new HemisphereLight(0xdff6ff, 0x101820, 1.1), lamp)
 
-    const bodyMaterial = new MeshStandardMaterial({ color: 0x243c40, metalness: .3, roughness: .5 })
-    const trimMaterial = new MeshBasicMaterial({ color: 0xa0d9c4, transparent: true, opacity: .7 })
-    const recordMaterial = new MeshStandardMaterial({ color: 0x80b9a8, metalness: .25, roughness: .45 })
+    // ---- the tunnel: strands twisting down the wall, ribs marking distance, tinted per chapter
+    const glass: number[] = [], glassHue: number[] = []
+    const seg = (t1: number, a1: number, t2: number, a2: number, dim: number) => {
+      wall(t1, a1, R, v).toArray(glass, glass.length)
+      wall(t2, a2, R, v).toArray(glass, glass.length)
+      for (const t of [t1, t2]) { const c = zone(t); glassHue.push(c.r * dim, c.g * dim, c.b * dim) }
+    }
+    const STEPS = 500
+    for (let k = 0; k < 40; k++) for (let i = 0; i < STEPS; i++) {
+      const t1 = i / STEPS, t2 = (i + 1) / STEPS, a = k / 40 * Math.PI * 2
+      seg(t1, a + t1 * 14, t2, a + t2 * 14, .55)
+    }
+    for (let i = 0; i <= 160; i++) for (let k = 0; k < 48; k++) seg(i / 160, k / 48 * Math.PI * 2, i / 160, (k + 1) / 48 * Math.PI * 2, i % 10 === 0 ? .9 : .25)
+    const glassGeo = new BufferGeometry()
+    glassGeo.setAttribute('position', new BufferAttribute(new Float32Array(glass), 3))
+    glassGeo.setAttribute('color', new BufferAttribute(new Float32Array(glassHue), 3))
+    const glassMat = new LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0, depthWrite: false })
+    scene.add(new LineSegments(glassGeo, glassMat))
+
+    // ---- wall detail: short chains of blocks, linked, their record plates switching like gates
+    const CHAINS = 90, PER = 4, gap = 2.6 / LEN
+    const bodyMat = new MeshLambertMaterial({ color: 0x253242, transparent: true, opacity: 0 })
+    const bodies = new InstancedMesh(new BoxGeometry(1, 1.3, .5), bodyMat, CHAINS * PER)
+    const links = new InstancedMesh(new BoxGeometry(.12, 1.4, .12), bodyMat, CHAINS * (PER - 1))
+    const plateMat = new MeshBasicMaterial({ transparent: true, opacity: 0 })
+    const plates = new InstancedMesh(new BoxGeometry(.72, .95, .06), plateMat, CHAINS * PER)
+    const plateHue: Color[] = []
+    for (let c = 0; c < CHAINS; c++) {
+      const t0 = .06 + rnd(c) * .8, a = rnd(c + .3) * Math.PI * 2
+      for (let j = 0; j < PER; j++) {
+        const t = t0 + j * gap, i = c * PER + j
+        bodies.setMatrixAt(i, onWall(t, a, R - .3))
+        plates.setMatrixAt(i, onWall(t, a, R - .58))
+        plateHue.push(zone(t))
+        if (j < PER - 1) links.setMatrixAt(c * (PER - 1) + j, onWall(t + gap / 2, a, R - .3))
+      }
+    }
+    scene.add(bodies, links, plates)
+
+    // ---- block rings: records fill as the camera nears, then the ring seals and flashes
+    const recordMat = new MeshBasicMaterial({ transparent: true, opacity: 0 })
+    const records = new InstancedMesh(new BoxGeometry(1.2, .7, .35), recordMat, RINGS * RECORDS)
+    ringT.forEach((t, i) => { for (let k = 0; k < RECORDS; k++) records.setMatrixAt(i * RECORDS + k, onWall(t, k / RECORDS * Math.PI * 2 + i, R - .35)) })
+    scene.add(records)
     const textures: Texture[] = []
-    const blockGeo = new RoundedBoxGeometry(4.4, 4.8, 6, 3, .16)
-    const recordGeo = new BoxGeometry(.36, .2, .06)
-    const railGeo = new BoxGeometry(.035, 4.2, .035)
-    const blockTimes = ledger.map((_, i) => .2 + i * .087)
-
-    const blocks: { group:Group; body:Mesh<RoundedBoxGeometry,MeshStandardMaterial>; records:Mesh[]; label:Mesh; scanner:Mesh; paint:(stage:string)=>void; openness:number }[]=[]
-    ledger.forEach((block, i) => {
-      const t = blockTimes[i], group = new Group()
-      const body=new Mesh(blockGeo,bodyMaterial.clone())
-      body.material.transparent=true
-      group.add(body)
-      const records:Mesh[]=[]
-      // The face holds records, a block hash and its predecessor: the visible grammar of a chain.
-      for (let n = 0; n < 16; n++) {
-        const record = new Mesh(recordGeo, recordMaterial)
-        record.position.set((n % 4 - 1.5) * .55, .4 - Math.floor(n / 4) * .38, 3.04)
-        group.add(record)
-        records.push(record)
-      }
-      for (const x of [-1.95, 1.95]) {
-        const rail = new Mesh(railGeo, trimMaterial)
-        rail.position.set(x, 0, 3.025)
-        group.add(rail)
-      }
+    const rings = ringT.map((t, i) => {
+      const glow = new Mesh(new TorusGeometry(R - .2, .06, 6, 72), new MeshBasicMaterial({ color: zone(t), transparent: true, opacity: 0 }))
+      at(t, 0, 0, glow.position)
+      glow.lookAt(at(t + .01))
       const c = document.createElement('canvas')
-      c.width = 1024; c.height = 360
+      c.width = 1024; c.height = 320
       const g = c.getContext('2d')!
-      const drawLabel=(stage:string)=>{
-        g.clearRect(0,0,c.width,c.height)
-        g.fillStyle='#d3eee3';g.font='500 47px monospace'
-        g.fillText(`BLOCK ${String(i+1).padStart(2,'0')}`,30,65)
-        g.font='28px monospace';g.fillStyle='#9fbbb7'
-        g.fillText(`hash  ${short(block.hash)}`,30,137)
-        g.fillText(`prev  ${short(block.prev)}`,30,190)
-        g.font='27px monospace';g.fillStyle='#bdf4d8'
-        g.fillText(stage,30,295)
-      }
-      drawLabel('ILLUSTRATIVE LEDGER')
       const texture = new CanvasTexture(c)
       texture.colorSpace = SRGBColorSpace
       textures.push(texture)
-      const label = new Mesh(new PlaneGeometry(3.7, 1.3), new MeshBasicMaterial({ map: texture, transparent: true, depthWrite: false }))
-      label.position.set(0, 1.35, 3.04)
-      group.add(label)
-      group.scale.setScalar(.55)
-      group.position.copy(at(t))
-      group.lookAt(at(t - .04))
-      scene.add(group)
-      const scanner=new Mesh(new PlaneGeometry(3.2,.055),new MeshBasicMaterial({color:0xc7ffe1,transparent:true,opacity:.9,side:DoubleSide}))
-      scanner.position.set(0,.6,3.12);scanner.visible=false;group.add(scanner)
-      blocks.push({group,body,records,label,scanner,openness:0,paint:stage=>{drawLabel(stage);texture.needsUpdate=true}})
+      const paint = (stage: string) => {
+        g.clearRect(0, 0, c.width, c.height)
+        g.fillStyle = '#060b14cc'; g.fillRect(0, 0, c.width, c.height)
+        g.fillStyle = '#' + zone(t).getHexString(); g.fillRect(0, 0, 8, c.height)
+        g.font = '500 50px monospace'; g.fillStyle = '#e6f6f0'
+        g.fillText(`BLOCK ${String(i + 1).padStart(2, '0')}`, 36, 70)
+        g.font = '30px monospace'; g.fillStyle = '#9fbbb7'
+        g.fillText(`hash  ${short(ledger[i].hash)}`, 36, 140)
+        g.fillText(`prev  ${short(ledger[i].prev)}`, 36, 192)
+        g.fillStyle = '#' + zone(t).getHexString(); g.fillText(stage, 36, 272)
+        texture.needsUpdate = true
+      }
+      paint('PENDING')
+      const label = new Mesh(new PlaneGeometry(4.2, 1.3), new MeshBasicMaterial({ map: texture, transparent: true, opacity: 0, depthWrite: false }))
+      at(t - .006, (i % 2 ? 1 : -1) * R * .45, R * .3, label.position)
+      label.lookAt(at(t - .05))
+      scene.add(glow, label)
+      return { glow, label, paint, fill: -1, flashAt: -1e9 }
     })
 
-    // One line joins successive block bodies. No wall tiles, grids or crossing decoration.
-    const chainRoute = new CatmullRomCurve3(blockTimes.map(t => at(t)))
-    scene.add(new Mesh(new TubeGeometry(chainRoute, 150, .055, 6, false), trimMaterial))
-    const pulse = new Mesh(new SphereGeometry(.12, 8, 8), new MeshBasicMaterial({ color: 0xb9f0d8 }))
-    scene.add(pulse)
+    // ---- inside: dust, and transactions streaking down the tunnel
+    const dust: number[] = []
+    for (let i = 0; i < 1600; i++) wall(rnd(i + .7), rnd(i + .2) * Math.PI * 2, Math.sqrt(rnd(i + .4)) * (R - 1.2), v).toArray(dust, dust.length)
+    const dustGeo = new BufferGeometry()
+    dustGeo.setAttribute('position', new BufferAttribute(new Float32Array(dust), 3))
+    const dustMat = new PointsMaterial({ size: .06, color: 0xcfeee6, transparent: true, opacity: 0, depthWrite: false })
+    scene.add(new Points(dustGeo, dustMat))
+    const box = new BoxGeometry(1, 1, 1)
+    const shade = new Float32Array(box.attributes.position.count * 4)
+    for (let i = 0; i < box.attributes.position.count; i++) shade.set([1, 1, 1, box.attributes.position.getZ(i) > 0 ? 1 : 0], i * 4) // bright head, clear tail
+    box.setAttribute('color', new BufferAttribute(shade, 4))
+    const streakMat = new MeshBasicMaterial({ vertexColors: true, transparent: true, opacity: 0, depthWrite: false })
+    const STREAKS = 260
+    const streakMesh = new InstancedMesh(box, streakMat, STREAKS)
+    streakMesh.frustumCulled = false
+    scene.add(streakMesh)
+    const streaks = Array.from({ length: STREAKS }, (_, i) => ({ s: -1, a: rnd(i + .1) * Math.PI * 2, r: 1.5 + rnd(i + .6) * (R - 2.8), v: (12 + rnd(i + .8) * 16) / LEN, len: (2 + rnd(i + .9) * 4) / LEN }))
+    const head = new Vector3(), tail = new Vector3()
 
-    // The collection surface dissolves as the visitor enters the ledger.
-    const surface = new Group()
-    const surfaceMaterials: MeshBasicMaterial[] = []
+    // ---- the mouth: NFT portraits, which drift out onto the wall as the tunnel forms
+    const cards: { mesh: Mesh<PlaneGeometry, MeshBasicMaterial>; t: number; a: number; r: number }[] = []
     const loader = new TextureLoader()
+    const urls = Object.values(files)
     let alive = true
-    Object.values(files).forEach((url, i) => {
+    urls.forEach((url, i) => {
       const texture = loader.load(url, () => {
         if (!alive) { texture.dispose(); return }
         texture.colorSpace = SRGBColorSpace
         for (let repeat = 0; repeat < 2; repeat++) {
-          const index = i + repeat * Object.keys(files).length
-          const t = .025 + index / (Object.keys(files).length * 2) * .13, a = index * 2.399
-          const material = new MeshBasicMaterial({ map: texture, side: DoubleSide, transparent: true })
-          surfaceMaterials.push(material)
-          const card = new Mesh(new PlaneGeometry(1.05, 1.05), material)
-          card.position.copy(at(t, Math.cos(a) * 5.8, Math.sin(a) * 5.8))
-          card.lookAt(at(Math.max(0, t - .03)))
-          surface.add(card)
+          const index = i + repeat * urls.length
+          const mesh = new Mesh(new PlaneGeometry(1.1, 1.1), new MeshBasicMaterial({ map: texture, side: DoubleSide, transparent: true }))
+          cards.push({ mesh, t: .012 + index / (urls.length * 2) * .11, a: index * 2.399, r: 5.4 + rnd(index) * 1.6 })
+          scene.add(mesh)
         }
       })
       textures.push(texture)
     })
-    for (let lane = 0; lane < 6; lane++) {
-      const points: Vector3[] = []
-      for (let i = 0; i <= 55; i++) {
-        const t = i / 56 * .17, a = lane / 6 * Math.PI * 2 + t
-        points.push(at(t, Math.cos(a) * 9, Math.sin(a) * 9))
-      }
-      surface.add(new Line(new BufferGeometry().setFromPoints(points), new LineBasicMaterial({ color: 0x80afaa, transparent: true, opacity: .12 })))
-    }
-    scene.add(surface)
 
-    const transaction=new Mesh(new BoxGeometry(.13,.13,.13),new MeshBasicMaterial({color:0xd6ffe8}))
-    transaction.visible=false;scene.add(transaction)
-    const raycaster=new Raycaster(),mouse=new Vector2(10,10)
-    let hovered=-1,active=-1,started=0,phase=-1,lastChapter=-1
-    const closestBlock=()=>{
-      const t=.001+progress(host)*.9
-      const index=blockTimes.findIndex(x=>x>t+.01)
-      return Math.min(blocks.length-2,index<0?blocks.length-2:index)
+    // ---- a visitor's transaction: click or Enter sends a packet to the next block ahead
+    const packet = new Mesh(new SphereGeometry(.22, 12, 12), new MeshBasicMaterial({ color: 0xffffff }))
+    packet.visible = false
+    scene.add(packet)
+    let camT = 0, reveal = 0, sending = -1, sentAt = 0, fromT = 0
+    const send = () => {
+      const target = ringT.findIndex(t => t > camT + .02)
+      if (reveal < .5 || target < 0 || sending >= 0) return
+      sending = target; sentAt = performance.now(); fromT = camT + .006
+      say(`Example transaction sent toward block ${target + 1}.`)
     }
-    const start=(index=hovered>=0?hovered:closestBlock())=>{
-      if(progress(host)<.1)return
-      if(active>=0){blocks[active].scanner.visible=false;blocks[active].paint('ILLUSTRATIVE LEDGER');blocks[active+1]?.paint('ILLUSTRATIVE LEDGER')}
-      active=Math.min(blocks.length-2,index);started=performance.now();phase=-1
-    }
-    const press=(e:PointerEvent)=>{if(e.button===0)start()}
-    const keyboard=(e:KeyboardEvent)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();start()}}
-    const leave=()=>{hovered=-1;mouse.set(10,10)}
-    canvas.addEventListener('pointerdown',press)
-    canvas.addEventListener('keydown',keyboard)
-    canvas.addEventListener('pointerleave',leave)
-    let pointerX = 0, pointerY = 0
-    const pointer = (e: PointerEvent) => {
+    const press = (e: PointerEvent) => { if (e.button === 0) send() }
+    const keyboard = (e: KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); send() } }
+    canvas.addEventListener('pointerdown', press)
+    canvas.addEventListener('keydown', keyboard)
+    const pointer = { x: 0, y: 0 }, eased = { x: 0, y: 0 }
+    const move = (e: PointerEvent) => {
       const r = canvas.getBoundingClientRect()
-      pointerX = (e.clientX - r.left) / r.width - .5
-      pointerY = (e.clientY - r.top) / r.height - .5
-      if(e.target===canvas)mouse.set(pointerX*2,-pointerY*2)
-      else leave()
+      pointer.x = (e.clientX - r.left) / r.width - .5
+      pointer.y = (e.clientY - r.top) / r.height - .5
     }
-    host.addEventListener('pointermove', pointer as EventListener)
-    let width=1,height=1
+    host.addEventListener('pointermove', move as EventListener)
+
     const size = () => {
       const r = canvas.getBoundingClientRect()
-      width=r.width;height=r.height
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5))
       renderer.setSize(r.width, r.height, false)
       camera.aspect = r.width / r.height
@@ -188,84 +220,113 @@ export default function JourneyFlight({ onFail, theme }: { onFail: () => void; t
     }
     size()
     const ro = new ResizeObserver(size); ro.observe(canvas)
-    let raf = 0, visible = false, lastTheme = '', lastFrame = 0
+
+    const dim = new Color(), white = new Color(0xffffff), look = new Vector3()
+    const dustDark = new Color(0xcfeee6), dustLight = new Color(0x2f5a55), bodyDark = new Color(0x253242), bodyLight = new Color(0x8fa7a4)
+    let raf = 0, visible = false, lastFrame = 0, ink = 1, inkTarget = 1, lastTheme = ''
     const frame = (now: number) => {
       if (!visible || document.hidden) { raf = 0; return }
+      const dt = lastFrame ? Math.min(.1, (now - lastFrame) / 1000) : .016
+      lastFrame = now
       const mode = themeRef.current
-      if (lastTheme !== mode) {
+      if (mode !== lastTheme) {
         lastTheme = mode
         targetBackground.setHex(mode === 'light' ? 0xeaf2ef : mode === 'darker' ? 0x020409 : 0x080d19)
-        bodyMaterial.color.setHex(mode === 'light' ? 0x789894 : 0x40645f)
+        inkTarget = mode === 'light' ? 0 : 1
       }
-      const dt=lastFrame?Math.min(.2,(now-lastFrame)/1000):.016
-      lastFrame=now
-      background.lerp(targetBackground, 1-Math.exp(-dt*8))
+      const k = 1 - Math.exp(-dt * 6)
+      background.lerp(targetBackground, k)
+      ink += (inkTarget - ink) * k
       renderer.setClearColor(background)
       ;(scene.fog as Fog).color.copy(background)
-      const p = progress(host), t = .001 + p * .9
-      const outside = Math.max(0,Math.min(1,(p-.07)/.1))
-      camera.position.copy(at(t, outside*8 + pointerX * .25, -pointerY * .2))
+      const light = mix(.5, 1, ink) // pastel hues darken on the light palette so they still read
+      glassMat.color.setScalar(light); plateMat.color.setScalar(light); recordMat.color.setScalar(light); streakMat.color.setScalar(light)
+      dustMat.color.lerpColors(dustLight, dustDark, ink)
+      bodyMat.color.lerpColors(bodyLight, bodyDark, ink)
+
+      // camera: down the middle of the curve, never rolling
+      const p = progress(host)
+      camT = .001 + p * .9
+      reveal = smooth((p - .05) / .13)
+      eased.x += (pointer.x - eased.x) * .06
+      eased.y += (pointer.y - eased.y) * .06
+      const sway = Math.sin(now * .0004) * .25
+      at(camT, eased.x * 1.2 + sway, -eased.y * .8, camera.position)
       camera.up.set(0, 1, 0)
-      camera.lookAt(at(t + .055))
-      const chapter=Math.min(5,Math.round(p*5))
-      if(chapter!==lastChapter){lastChapter=chapter;if(chapter>0&&chapter<5)start(closestBlock())}
-      const opacity = Math.max(0, Math.min(1, (.17 - p) / .07))
-      surface.visible = opacity > 0
-      surfaceMaterials.forEach(m => { m.opacity = opacity })
-      pulse.position.copy(chainRoute.getPointAt((now * .000015) % 1))
-      renderer.setScissorTest(false)
-      renderer.setViewport(0,0,width,height)
-      renderer.clear()
-      camera.fov=width<height?72:58
-      camera.aspect=width/height
-      camera.updateProjectionMatrix()
-      key.position.copy(camera.position).add(new Vector3(-8, 9, 6))
-      key.target.position.copy(at(t))
-      fill.position.copy(camera.position).add(new Vector3(7, -1, -4))
-      fill.target.position.copy(at(t))
-      camera.updateMatrixWorld()
-      raycaster.setFromCamera(mouse,camera)
-      const hit=raycaster.intersectObjects(blocks.map(b=>b.body),false)[0]
-      hovered=hit?blocks.findIndex(b=>b.body===hit.object):-1
-      canvas.style.cursor=hovered>=0?'zoom-in':'crosshair'
-      const elapsed=active>=0?Math.max(0,(now-started)/1000):0
-      blocks.forEach((block,i)=>{
-        const target=i===hovered||i===active&&elapsed<3.2?1:0
-        block.openness+=(target-block.openness)*(1-Math.exp(-dt*7))
-        block.body.material.color.copy(bodyMaterial.color)
-        block.body.material.opacity=1-block.openness*.82
-        block.records.forEach((record,n)=>{
-          record.position.z=3.04+block.openness*(.45+(n%4)*.35)
-          record.scale.setScalar(i===active&&elapsed<1.6?Math.max(.15,Math.min(1,elapsed*1.5-n*.06)):1)
-        })
-        block.label.position.z=3.04+block.openness*.35
+      camera.lookAt(at(camT + .03, eased.x * 2.5, -eased.y * 1.5, look))
+      lamp.position.copy(camera.position)
+
+      const detail = reveal * (1 - smooth((p - .86) / .1)) // the outro keeps only the tunnel lines behind its heading
+      glassMat.opacity = .75 * reveal * (1 - .5 * smooth((p - .86) / .1))
+      bodyMat.opacity = plateMat.opacity = recordMat.opacity = detail
+      bodyMat.visible = plateMat.visible = detail > 0
+      dustMat.opacity = .55 * reveal
+      streakMat.opacity = detail
+      streakMesh.visible = dustMat.visible = reveal > 0
+
+      // portraits spread to the wall and fade as the tunnel takes over
+      const cardFade = .7 * (1 - smooth((p - .07) / .1))
+      for (const c of cards) {
+        c.mesh.visible = cardFade > 0
+        c.mesh.material.opacity = cardFade
+        wall(c.t, c.a + reveal * .6, mix(c.r, R - .6, reveal), c.mesh.position)
+        c.mesh.lookAt(at(c.t - .03, 0, 0, v))
+      }
+
+      const seconds = now / 1000
+      for (let i = 0; i < plateHue.length; i++) plates.setColorAt(i, Math.sin(seconds * (1.5 + rnd(i + .9) * 4) + i) > .2 ? plateHue[i] : dim.copy(plateHue[i]).multiplyScalar(.15))
+      plates.instanceColor!.needsUpdate = true
+
+      rings.forEach((ring, i) => {
+        const fill = Math.round(smooth((.11 - (ringT[i] - camT)) / .06) * RECORDS)
+        if (fill !== ring.fill) {
+          if (fill === RECORDS && ring.fill >= 0 && ring.fill < RECORDS) ring.flashAt = now
+          ring.fill = fill
+          ring.paint(fill === 0 ? 'PENDING' : fill < RECORDS ? `COLLECTING ${fill}/${RECORDS}` : 'SEALED')
+        }
+        const flash = Math.exp(-(now - ring.flashAt) / 500)
+        for (let n = 0; n < RECORDS; n++) records.setColorAt(i * RECORDS + n, n < fill ? dim.copy(zone(ringT[i])).lerp(white, flash * .7) : dim.copy(zone(ringT[i])).multiplyScalar(.15))
+        ring.glow.material.opacity = detail * (.3 + flash * .7)
+        ring.label.material.opacity = detail
       })
-      if(active>=0){
-        const block=blocks[active],next=Math.min(3,Math.floor(elapsed/1.4))
-        if(next!==phase){phase=next;const stages=['COLLECTING RECORDS','VALIDATING RECORDS','SEALING / HASH','LINKING NEXT BLOCK'];block.paint(stages[next]);if(statusRef.current)statusRef.current.textContent=`Example transaction: ${stages[next].toLowerCase()}.`}
-        transaction.visible=true
-        if(elapsed<1.4){
-          const q=elapsed/1.4,from=block.group.localToWorld(new Vector3(-5,2,6)),to=block.group.localToWorld(new Vector3(0,0,4))
-          transaction.position.copy(from.lerp(to,q));block.scanner.visible=false
-        }else if(elapsed<2.8){
-          transaction.visible=false;block.scanner.visible=true;block.scanner.position.y=.6-(elapsed-1.4)/1.4*1.7
-        }else if(elapsed<4.2){
-          transaction.visible=false;block.scanner.visible=false
-        }else if(elapsed<5.6){
-          block.scanner.visible=false
-          transaction.position.copy(at(blockTimes[active]+(blockTimes[active+1]-blockTimes[active])*(elapsed-4.2)/1.4))
-          blocks[active+1].paint('PREV / '+short(ledger[active].hash))
-        }else{
-          block.paint('SEALED / '+short(ledger[active].hash));blocks[active+1].paint('ILLUSTRATIVE LEDGER')
-          if(statusRef.current)statusRef.current.textContent='Example sealed. The next block references its hash. Click or press Enter to replay.'
-          transaction.visible=false;active=-1
+      records.instanceColor!.needsUpdate = true
+
+      for (let i = 0; i < STREAKS; i++) {
+        const s = streaks[i]
+        s.s += s.v * dt
+        if (s.s < camT - .04 || s.s > camT + .26) s.s = s.s < 0 ? camT - .01 + rnd(i) * .27 : camT - .01 + rnd(i + now) * .03
+        wall(s.s, s.a, s.r, head)
+        wall(s.s - s.len, s.a, s.r, tail)
+        o.position.copy(tail)
+        o.up.set(0, 1, 0)
+        o.lookAt(head)
+        o.position.lerp(head, .5)
+        const thick = .06 * Math.min(1, Math.max(.15, o.position.distanceTo(camera.position) / 10)) // thin near the lens
+        o.scale.set(thick, thick, head.distanceTo(tail))
+        o.updateMatrix()
+        o.scale.set(1, 1, 1)
+        streakMesh.setMatrixAt(i, o.matrix)
+        streakMesh.setColorAt(i, zone(s.s))
+      }
+      streakMesh.instanceMatrix.needsUpdate = true
+      streakMesh.instanceColor!.needsUpdate = true
+
+      if (sending >= 0) {
+        const q = (now - sentAt) / 1300
+        packet.visible = q < 1
+        at(mix(fromT, ringT[sending], smooth(q)), 0, -.6, packet.position)
+        if (q >= 1) {
+          rings[sending].flashAt = now
+          say(`Recorded in block ${sending + 1}. Its hash ${short(ledger[sending].hash)} becomes the next block's prev. Click or press Enter to send another.`)
+          sending = -1
         }
       }
+
       renderer.render(scene, camera)
       canvas.dataset.ready = 'true'
       raf = requestAnimationFrame(frame)
     }
-    const wake = () => { if (visible && !document.hidden && !raf) raf = requestAnimationFrame(frame) }
+    const wake = () => { if (visible && !document.hidden && !raf) { lastFrame = 0; raf = requestAnimationFrame(frame) } }
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; wake() }); io.observe(canvas)
     const lost = (e: Event) => { e.preventDefault(); onFail() }
     canvas.addEventListener('webglcontextlost', lost)
@@ -273,21 +334,19 @@ export default function JourneyFlight({ onFail, theme }: { onFail: () => void; t
     return () => {
       alive = false
       cancelAnimationFrame(raf); io.disconnect(); ro.disconnect()
-      host.removeEventListener('pointermove', pointer as EventListener)
-      canvas.removeEventListener('pointerdown',press);canvas.removeEventListener('keydown',keyboard);canvas.removeEventListener('pointerleave',leave)
+      host.removeEventListener('pointermove', move as EventListener)
+      canvas.removeEventListener('pointerdown', press); canvas.removeEventListener('keydown', keyboard)
       canvas.removeEventListener('webglcontextlost', lost)
       document.removeEventListener('visibilitychange', wake)
-      const geometries = new Set<BufferGeometry>()
-      const materials = new Set<MeshBasicMaterial | MeshStandardMaterial | LineBasicMaterial>()
-      scene.traverse(o => {
-        if (o instanceof Mesh || o instanceof Line) {
-          geometries.add(o.geometry)
-          for (const m of Array.isArray(o.material) ? o.material : [o.material]) materials.add(m)
-        }
+      const geometries = new Set<BufferGeometry>(), materials = new Set<Material>()
+      scene.traverse(x => {
+        const m = x as Mesh
+        if (m.geometry) geometries.add(m.geometry)
+        if (m.material) for (const mat of Array.isArray(m.material) ? m.material : [m.material]) materials.add(mat)
       })
       geometries.forEach(g => g.dispose()); materials.forEach(m => m.dispose())
-      textures.forEach(t => t.dispose()); bodyMaterial.dispose(); renderer.dispose()
+      textures.forEach(t => t.dispose()); renderer.dispose()
     }
   }, [onFail])
-  return <><canvas className="journey__flight" ref={ref} tabIndex={0} role="button" aria-label="Explore the illustrative blockchain animation. Hover to open a block; click or press Enter to follow an example transaction." aria-describedby="journey-animation-status" /><span className="sr-only" ref={statusRef} id="journey-animation-status" aria-live="polite" /></>
+  return <><canvas className="journey__flight" ref={ref} tabIndex={0} role="button" aria-label="Fly through an illustrative blockchain tunnel. Click or press Enter to send an example transaction to the next block." aria-describedby="journey-animation-status" /><span className="sr-only" ref={statusRef} id="journey-animation-status" aria-live="polite" /></>
 }
