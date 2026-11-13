@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { buildTree, hex, leafHash, proofFor, verify } from '../lib/merkle'
-import { fallbackSrc } from '../lib/photos'
+import { thumb } from '../lib/photos'
 
 const crew = [
   { name: 'Scout', art: 'chain-solpatrol', role: 'Fast routes' },
@@ -65,7 +65,7 @@ export function MissionExample() {
           ))}
         </svg>
         <div className="expedition__traveller">
-          <img src={fallbackSrc(character.art)} alt={character.name} />
+          <img {...thumb(character.art)} alt={character.name} />
           <span>{phase === 'loot' ? 'Loot found!' : phase === 'travel' ? 'Exploring…' : 'Your character'}</span>
         </div>
         {phase === 'loot' && (
@@ -79,7 +79,7 @@ export function MissionExample() {
       <div className="expedition__choices" role="group" aria-label="Choose your character">
         {crew.map((c, i) => (
           <button key={c.name} disabled={phase !== 'ready'} aria-pressed={i === selected} onClick={() => setSelected(i)}>
-            <img src={fallbackSrc(c.art)} alt="" />
+            <img {...thumb(c.art)} alt="" />
             <span>
               {c.name}
               <small>{c.role}</small>

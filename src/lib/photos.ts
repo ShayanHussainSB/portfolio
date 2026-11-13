@@ -23,3 +23,12 @@ export const srcSet = (name: string, ext: PhotoExt) => buildSrcSet(FILES, name, 
 
 /** The largest JPEG of a photo, for the <img> fallback. */
 export const fallbackSrc = (name: string) => srcSet(name, 'jpg').split(', ').at(-1)!.split(' ')[0]
+
+/** Props for a small avatar (≤ 80 CSS px): the browser picks the smallest JPEG that fits, loaded lazily. */
+export const thumb = (name: string) => ({
+  src: fallbackSrc(name),
+  srcSet: srcSet(name, 'jpg'),
+  sizes: '80px',
+  loading: 'lazy' as const,
+  decoding: 'async' as const,
+})

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { advanceAssetPipeline, initialAssetPipeline, requestLevelUp, isAssetPipelineComplete } from '../lib/asset-pipeline'
-import { fallbackSrc } from '../lib/photos'
+import { thumb } from '../lib/photos'
 
 const steps = [
   { key: 'backend', name: 'Backend', detail: 'build transaction' },
@@ -62,7 +62,7 @@ export function StreamExample() {
       <p className="journey-demo__note">Interactive pipeline model · synthetic transactions</p>
       <div className="echo-play__world">
         <div className="echo-play__asset">
-          <img src={fallbackSrc('journey-madlads-2')} alt="Example on-chain character" />
+          <img {...thumb('journey-madlads-2')} alt="Example on-chain character" />
           <span>On-chain</span>
           <b>level {state.chain + 1}</b>
         </div>
@@ -83,7 +83,7 @@ export function StreamExample() {
           </span>
         </div>
         <div className="echo-play__asset echo-play__asset--mirror">
-          <img src={fallbackSrc('journey-madlads-2')} alt="Client view of the character" />
+          <img {...thumb('journey-madlads-2')} alt="Client view of the character" />
           <span>In your app</span>
           <b>level {state.client + 1}</b>
         </div>

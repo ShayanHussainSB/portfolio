@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createSdkExample, SDK_FIELDS, type SdkField, type SdkLanguage } from '../lib/sdk-example'
-import { fallbackSrc } from '../lib/photos'
+import { thumb } from '../lib/photos'
 
 const languages: SdkLanguage[] = ['TypeScript', 'C#', 'C++', 'Godot']
 const filenames = { TypeScript: 'Profile.ts', 'C#': 'Profile.cs', 'C++': 'Profile.hpp', Godot: 'profile.gd' }
@@ -83,7 +83,7 @@ export function SdkExample() {
         </header>
         {view === 'response' ? (
           <div className="sdk-lab__response" key={reads}>
-            <img src={fallbackSrc('journey-madlads-1')} alt="Sample character profile" />
+            <img {...thumb('journey-madlads-1')} alt="Sample character profile" />
             <div>
               <strong>Profile resolved</strong>
               <pre>
