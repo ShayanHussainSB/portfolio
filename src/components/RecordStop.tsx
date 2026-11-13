@@ -69,6 +69,15 @@ function Program({ code }: { code: string }) {
  */
 export function RecordStop({ ctaHref }: { ctaHref: string }) {
   const [asked, setAsked] = useState<number[]>([])
+  const log = useRef<HTMLOListElement>(null)
+  // the log is a chat window of fixed height: each new question scrolls to its top, its answer underneath
+  useEffect(() => {
+    const ol = log.current
+    const you = ol?.querySelectorAll<HTMLElement>('[data-from="you"]')
+    if (!ol || !you?.length) return
+    const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches
+    ol.scrollTo({ top: you[you.length - 1].offsetTop - 24, behavior: smooth ? 'smooth' : 'instant' })
+  }, [asked])
   const left = ask.questions.map((_, i) => i).filter((i) => !asked.includes(i))
   return (
     <section id="record" aria-labelledby="record-title">
@@ -79,7 +88,7 @@ export function RecordStop({ ctaHref }: { ctaHref: string }) {
           <p>{ask.sub}</p>
         </header>
         <div className="ask__talk">
-          <ol role="log" aria-label={ask.logLabel}>
+          <ol role="log" aria-label={ask.logLabel} ref={log} tabIndex={0}>
             <li data-from="site">
               <b className="mono">{ask.site}</b>
               <p>{ask.opening}</p>

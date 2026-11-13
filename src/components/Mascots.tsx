@@ -10,7 +10,8 @@ import { ICONS } from '../lib/icons'
  * The contact links' characters, modelled like soft clay toys: everything rounded, matte, a little glossy.
  * They are original characters; the GitHub and LinkedIn marks appear only on the badges two of them hold.
  */
-type Act = (t: number, excited: number) => void
+/** `x` is excited time (excitement summed over time): extra speed goes into the phase through it, so a hover never makes the phase jump. */
+type Act = (t: number, excited: number, x: number) => void
 const clay = (color: string, roughness = 0.5) => new MeshStandardMaterial({ color: new Color(color), roughness, metalness: 0 })
 const at = <T extends Object3D>(o: T, x = 0, y = 0, z = 0): T => {
   o.position.set(x, y, z)
@@ -93,11 +94,11 @@ function cast(): { g: Group; act: Act }[] {
   catAll.add(cat.g, tail, hub, pool('#3d2c66'))
   cat.left.rotation.set(-0.9, 0, 0.5)
   cat.right.rotation.set(-0.9, 0, -0.5)
-  const purr: Act = (t, e) => {
+  const purr: Act = (t, e, x) => {
     cat.blink(t)
-    tail.rotation.z = Math.sin(t * (3 + e * 6)) * 0.4
+    tail.rotation.z = Math.sin(t * 3 + x * 6) * 0.4
     cat.head.rotation.z = Math.sin(t * 1.4) * 0.09
-    hub.position.y = -0.42 + Math.abs(Math.sin(t * (2 + e * 5))) * (0.05 + e * 0.35)
+    hub.position.y = -0.42 + Math.abs(Math.sin(t * 2 + x * 5)) * (0.05 + e * 0.35)
     hub.rotation.y = Math.sin(t * 2) * 0.25 + e * Math.sin(t * 9) * 0.5
   }
   // LinkedIn: a blue fellow in a tie, waving, with the LinkedIn mark floating beside him
@@ -107,13 +108,13 @@ function cast(): { g: Group; act: Act }[] {
   const inn = at(badge(ICONS.linkedin, '#ffffff', '#2f6bd8'), -1.05, 0.25, 0.2)
   const proAll = new Group()
   proAll.add(at(pro.g, 0.25, 0, 0), inn, pool('#1c3566'))
-  const wave: Act = (t, e) => {
+  const wave: Act = (t, e, x) => {
     pro.blink(t + 1.3)
-    pro.right.rotation.z = 2.35 + Math.sin(t * (6 + e * 9)) * 0.4
+    pro.right.rotation.z = 2.35 + Math.sin(t * 6 + x * 9) * 0.4
     pro.head.rotation.z = Math.sin(t * 1.7) * 0.1
-    pro.g.position.y = Math.abs(Math.sin(t * (2 + e * 4))) * (0.04 + e * 0.3)
+    pro.g.position.y = Math.abs(Math.sin(t * 2 + x * 4)) * (0.04 + e * 0.3)
     inn.position.y = 0.25 + Math.sin(t * 1.8) * 0.12
-    inn.rotation.y = 0.35 + Math.sin(t * 1.1) * 0.3 + e * t * 4
+    inn.rotation.y = 0.35 + Math.sin(t * 1.1) * 0.3 + x * 4
   }
   // JointOps: an open parcel, with three packages (hitlimit, bunWay, kaput) bobbing out of it
   const card = clay('#e2a12a'), parcel = new Group()
@@ -124,12 +125,12 @@ function cast(): { g: Group; act: Act }[] {
   parcel.add(at(slab(1.8, 1.1, 1.5, card, 0.14), 0, -0.1, 0), at(slab(0.3, 1.12, 1.52, clay('#f4d48a'), 0.05), 0, -0.1, 0), lidL, lidR, ...pkgs)
   const parcelAll = new Group()
   parcelAll.add(at(parcel, 0, -0.5, 0), pool('#5a3d05'))
-  const unpack: Act = (t, e) => {
+  const unpack: Act = (t, e, x) => {
     lidL.rotation.z = 0.9 + Math.sin(t * 1.6) * 0.15
     lidR.rotation.z = -0.9 - Math.sin(t * 1.6 + 1) * 0.15
     pkgs.forEach((p, i) => {
-      p.position.y = 0.75 + Math.sin(t * (2 + e * 4) + i * 1.9) * (0.28 + e * 0.5) + i * 0.12
-      p.rotation.set(Math.sin(t + i) * 0.3, t * (0.8 + e * 3) + i * 2, 0)
+      p.position.y = 0.75 + Math.sin(t * 2 + x * 4 + i * 1.9) * (0.28 + e * 0.5) + i * 0.12
+      p.rotation.set(Math.sin(t + i) * 0.3, t * 0.8 + x * 3 + i * 2, 0)
     })
   }
   // Email: an open envelope; the letter rides up out of it, and an @ badge bobs above
@@ -151,10 +152,10 @@ function cast(): { g: Group; act: Act }[] {
   )
   const mailAll = new Group()
   mailAll.add(at(env, 0, -0.35, 0), pool('#232a66'))
-  const post: Act = (t, e) => {
-    letter.position.y = 0.42 + Math.sin(t * (1.6 + e * 4)) * (0.2 + e * 0.2)
+  const post: Act = (t, e, x) => {
+    letter.position.y = 0.42 + Math.sin(t * 1.6 + x * 4) * (0.2 + e * 0.2)
     env.rotation.z = Math.sin(t * 1.2) * 0.05
-    env.position.y = -0.35 + Math.abs(Math.sin(t * (2 + e * 4))) * e * 0.25
+    env.position.y = -0.35 + Math.abs(Math.sin(t * 2 + x * 4)) * e * 0.25
   }
   return [
     { g: catAll, act: purr },
@@ -191,6 +192,7 @@ export default function Mascots() {
     const actors = cast()
     actors.forEach((a) => scene.add(a.g))
     const excited = actors.map(() => 0)
+    const xt = actors.map(() => 0) // each character's excited time
     const hot = stages.map((s) => s.closest('a')!)
 
     // Compare against what THIS renderer applied, never the canvas: under StrictMode a second renderer inherits
@@ -198,6 +200,7 @@ export default function Mascots() {
     let applied = ''
     let last = 1.2
     const draw = (t: number) => {
+      const dt = Math.min(0.1, Math.max(0, t - last)) // a paused tab resumes without a leap
       last = t
       const r = c.getBoundingClientRect()
       const dpr = Math.min(2, devicePixelRatio || 1) // capped: four characters at 3× cost too much on a mid-range phone
@@ -217,7 +220,8 @@ export default function Mascots() {
         excited[i] += ((hot[i].matches(':hover, :focus-visible, :active') ? 1 : 0) - excited[i]) * 0.1
         actors.forEach((x) => (x.g.visible = x === a))
         a.g.rotation.y = -0.3 + Math.sin(t * 0.6 + i) * 0.22
-        a.act(t, excited[i])
+        xt[i] += excited[i] * dt
+        a.act(t, excited[i], xt[i])
         const x = s.left - r.left, y = r.bottom - s.bottom
         renderer.setViewport(x, y, s.width, s.height)
         renderer.setScissor(x, y, s.width, s.height)

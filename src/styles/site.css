@@ -368,7 +368,9 @@ summary { cursor: pointer; font-size: 15px; font-weight: 600; width: fit-content
 .scene__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; background: var(--hue); color: var(--ink); }
 .reel { position: absolute; inset: 0 0 auto; width: 100%; height: 54%; }
 .scene__mask { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; background: #000; mix-blend-mode: multiply; opacity: calc((0.44 - var(--p)) * 6); }
-.scene__mask b { --q: min(1, var(--p) * 2.1); color: #fff; font-size: calc(116vw / var(--n)); font-stretch: 125%; font-weight: 800; letter-spacing: -0.035em; line-height: 1; white-space: nowrap; scale: calc(1 + var(--q) * var(--q) * var(--q) * 44); transform-origin: var(--ox, 50%) 50%; will-change: scale; }
+.scene__mask b { --q: min(1, var(--p) * 2.1); color: #fff; font-size: calc(116vw / var(--n)); font-stretch: 125%; font-weight: 800; letter-spacing: -0.035em; line-height: 1; white-space: nowrap; scale: calc(1 + var(--q) * var(--q) * var(--q) * 44); transform-origin: var(--ox, 50%) 50%; }
+/* no will-change on the mask: Chrome keeps such a layer at the scale it was first drawn at, so scrolling UP into a scene
+   (first drawn at ~36×) re-rasterized the whole word at that scale near p = 0 and froze for a second or more */
 /* the mask multiplies to pure black; this lifts it back to the page's ground so the stage has no seam */
 .scene__stage::after { content: ''; position: absolute; inset: 0; z-index: 2; background: var(--ground); mix-blend-mode: lighten; pointer-events: none; opacity: calc((0.44 - var(--p)) * 6); }
 .scene__say { position: absolute; inset: auto var(--gutter) clamp(28px, 7vh, 84px); z-index: 3; opacity: calc((var(--p) - 0.47) * 9); translate: 0 calc(max(0, 0.6 - var(--p)) * 260px); }
@@ -444,7 +446,8 @@ kbd { font: 11px var(--mono); border: 1px solid currentColor; border-radius: 3px
 .ask h2 { margin-top: 28px; font-size: clamp(40px, 6vw, 108px); font-weight: 800; font-stretch: 125%; letter-spacing: -0.04em; line-height: 0.94; text-wrap: balance; }
 .ask header > p:last-child { margin-top: 28px; font-size: clamp(19px, 1.7vw, 24px); opacity: 0.85; max-width: 26ch; }
 .ask__talk { grid-column: 8 / -1; }
-.ask ol { display: grid; gap: 14px; }
+/* the log is a chat window: it grows to a cap, then scrolls inside (RecordStop brings each new question to its top) */
+.ask ol { position: relative; display: grid; align-content: start; gap: 14px; max-height: min(64svh, 620px); overflow-y: auto; padding: 24px 10px 12px 0; mask-image: linear-gradient(transparent, #000 24px); scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--paper) 35%, transparent) transparent; }
 .ask ol li { max-width: 92%; padding: 16px 20px 18px; border-radius: 3px; animation: say 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .ask ol li[data-from='site'] { background: var(--paper); color: var(--ink); box-shadow: 8px 8px 0 var(--hue-hitlimit); animation-delay: 0.25s; }
 .ask ol li[data-from='you'] { justify-self: end; background: var(--volt); color: var(--ink); }
