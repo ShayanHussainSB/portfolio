@@ -381,6 +381,39 @@ summary { cursor: pointer; font-size: 15px; font-weight: 600; width: fit-content
 .scene .project__head { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); margin: 0; }
 .scene .project__head .strip { display: none; }
 
+/* ---------- chain journey: his Solana years, flown through as hash-linked blocks ---------- */
+.chain { --chain-grad: linear-gradient(90deg, #9945ff, #14f195); }
+.chain__pin { --p: 0; height: calc((var(--n) + 1) * 90svh); }
+.chain__stage { position: sticky; top: 0; height: 100svh; overflow: hidden; perspective: 1000px; background: radial-gradient(ellipse 70% 55% at 50% 55%, #15102a, var(--ground) 70%); color: var(--paper); }
+.chain__title { position: absolute; top: clamp(84px, 12vh, 130px); left: var(--gutter); right: var(--gutter); z-index: 2; display: grid; gap: 10px; font-size: clamp(30px, 4.4vw, 76px); font-weight: 800; font-stretch: 125%; letter-spacing: -0.035em; line-height: 1; opacity: calc(1 - var(--p) * 14); pointer-events: none; }
+.chain__title .mono { font-size: 13px; font-weight: 400; letter-spacing: 0; opacity: 0.7; }
+.chain__blocks { position: absolute; inset: 0; transform-style: preserve-3d; }
+/* --d: where this block is relative to the camera (<0 ahead, 0 at the front, >0 passed). --e eases it so each block dwells at the front. */
+.block { --d: calc(var(--p) * (var(--n) - 1) - var(--i)); --e: var(--d);
+  position: absolute; inset: 0; margin: auto; width: min(calc(100% - 2 * var(--gutter)), 1120px); height: fit-content; max-height: 86svh;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: 'meta meta' 'art words'; gap: clamp(18px, 3vw, 48px) clamp(24px, 4vw, 64px); align-items: center;
+  padding-top: 18px;
+  /* the chain recedes up and to the right, so the next block waits beside the current one, not behind its words */
+  transform: translate3d(calc(var(--e) * -92vw), calc(var(--e) * 50svh), calc(var(--e) * 1100px));
+  opacity: min(clamp(0, calc(1 + var(--e) * 0.92), 1), clamp(0, calc(1 - var(--e) * 3.2), 1)); }
+@supports (width: calc(round(1.5) * 1px)) {
+  .block { --e: calc(round(var(--d)) + (var(--d) - round(var(--d))) * (var(--d) - round(var(--d))) * (var(--d) - round(var(--d))) * 4); }
+}
+.block:not([data-current='true']) { pointer-events: none; }
+/* the link: the gradient bar snaps across as the block reaches the front */
+.block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--chain-grad); transform-origin: left; scale: clamp(0, calc(1 + var(--e) / 0.5), 1) 1; }
+.block:not([data-art]) { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'meta' 'words'; }
+.block__meta { grid-area: meta; display: flex; flex-wrap: wrap; gap: 4px 28px; font-size: 12px; opacity: 0.72; }
+.block[data-current='true'] .block__meta span:nth-child(2) { color: #14f195; opacity: 1; }
+.block__art { grid-area: art; display: block; aspect-ratio: 1; max-height: 62svh; background: var(--deep); border-radius: 4px; overflow: hidden; box-shadow: 0 0 0 1px #ffffff1f, 0 30px 120px -30px #9945ff88; }
+.block__art img { width: 100%; height: 100%; object-fit: cover; }
+.block__words { grid-area: words; display: grid; gap: clamp(14px, 2vh, 24px); justify-items: start; }
+.block h3 { font-size: clamp(38px, 6vw, 108px); font-weight: 800; font-stretch: 125%; letter-spacing: -0.04em; line-height: 0.95; text-wrap: balance; }
+.block:not([data-art]) h3 { font-size: clamp(44px, 8.4vw, 150px); }
+.block__words p { font-size: clamp(17px, 1.6vw, 24px); max-width: 30em; opacity: 0.86; }
+.block__cta { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+.block .btn:hover:not(:disabled) { border-color: var(--volt); }
+
 /* ---------- the index: every project, as a directory listing ---------- */
 .index { padding-top: clamp(100px, 13vw, 190px); }
 .index__cmd { font-size: 13px; opacity: 0.75; padding-bottom: 14px; border-bottom: 1.5px solid var(--paper); }
@@ -559,11 +592,22 @@ kbd { font: 11px var(--mono); border: 1px solid currentColor; border-radius: 3px
   .scene__mask, .scene__stage::after { display: none; }
   .reel { opacity: 0.4; }
   .scene__say { position: relative; inset: auto; opacity: 1; translate: none; padding: 34svh var(--gutter) clamp(28px, 7vh, 84px); }
+  /* the chain doesn't fly: its blocks stand in a column */
+  .chain__pin { height: auto; }
+  .chain__stage { position: relative; height: auto; overflow: visible; perspective: none; padding: clamp(84px, 12vh, 130px) 0 12vh; }
+  .chain__title { position: relative; inset: auto; opacity: 1; margin: 0 var(--gutter) 10vh; }
+  .chain__blocks { position: static; }
+  .chain .block { position: relative; inset: auto; transform: none; opacity: 1; max-height: none; margin: 0 auto 12vh; pointer-events: auto; }
+  .block::before { scale: 1; }
 }
 
 /* ---------- narrow ---------- */
 @media (max-width: 760px) {
   body { font-size: 16px; }
+  .chain__stage { perspective: 800px; }
+  .block[data-art] { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'meta' 'art' 'words'; gap: 16px; }
+  .block__art { width: min(70vw, 38svh); }
+  .block__meta { gap: 2px 16px; font-size: 11px; }
   .site-header { padding-block: 18px; }
   .site-header__name { font-size: 14px; max-width: 7em; line-height: 1.15; }
   .site-header nav { font-size: 14px; }

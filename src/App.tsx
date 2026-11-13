@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { content } from './content'
 import { AllWork, Index } from './components/AllWork'
+import { ChainJourney } from './components/ChainJourney'
 import { EdgeStop } from './components/EdgeStop'
 import { Hero } from './components/Hero'
 import { HitlimitStop } from './components/HitlimitStop'
@@ -79,6 +80,7 @@ export function App() {
       <main id="main">
         <Hero obs={obs} />
         <EdgeStop region={obs?.region ?? null} />
+        <ChainJourney ctaHref={ctaHref} />
         <div className="work" id="work">
           {content.featured.map((id) => {
             const Stop = FEATURED[id]
