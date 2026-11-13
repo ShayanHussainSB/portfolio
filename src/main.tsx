@@ -3,6 +3,12 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import './styles/site.css'
 import { App } from './App'
 import { bf, CHEEKY } from './lib/bf'
+import { inject } from '@vercel/analytics'
+import { injectSpeedInsights } from '@vercel/speed-insights'
+
+// Free on Vercel Hobby; both are no-ops in `vite dev`.
+inject()
+injectSpeedInsights()
 
 const root = document.getElementById('root')!
 const app = (

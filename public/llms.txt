@@ -1,0 +1,30 @@
+# Shayan M Hussain
+
+> Shayan M Hussain (also Shayan Hussain, GitHub: ShayanHussainSB) is a backend architect with 7+ years of experience, based in Karachi, Pakistan, and working remotely with teams worldwide. He builds the systems other developers depend on: backend infrastructure, developer tooling and open source for Node.js and Bun.
+
+Website: https://shayan.jointops.dev/
+Email: shayanhussain48@gmail.com
+GitHub: https://github.com/ShayanHussainSB
+LinkedIn: https://www.linkedin.com/in/shayanhussainsb
+Open source organisation: https://github.com/JointOps
+
+## Open source
+
+- [hitlimit](https://github.com/JointOps/hitlimit-monorepo): rate limiting for Node.js and Bun (`@joint-ops/hitlimit`, `@joint-ops/hitlimit-bun`). 8 storage backends, zero dependencies in the core, adapters for 6 frameworks, tiered limits and auto-ban. About 3.3K npm downloads a month.
+- [bunWay](https://github.com/JointOps/bunway): an Express-compatible web framework on Bun. 26 built-in middleware, zero dependencies, 2,423 tests, 97%+ Express parity.
+- [kaput](https://github.com/JointOps/kaput): zero-config graceful shutdown for Node.js (`@joint-ops/kaput`). Auto-detects Express, Fastify, Prisma, Redis, BullMQ, Mongoose and Knex, and serves `/health` and `/healthz`.
+
+## Work
+
+- Honeycomb Protocol: Web3 game infrastructure on Solana. Shayan built its GraphQL-to-SDK generator, which produces SDKs in 4 languages (JavaScript, C# for Unity, C++ for Unreal Engine, Godot). Honeycomb's state compression makes on-chain game state 1000x or more cheaper while keeping it verifiable.
+- GameShift: NestJS aggregation services, indexers, WebSockets and in-game payment APIs.
+
+## Recognition
+
+- Sandstorm 2023 hackathon: winner
+- Grizzlython: 3rd place
+- Civic Hackathon: winner
+
+## Contact
+
+Open to remote work with teams anywhere. The best way to reach him is email: shayanhussain48@gmail.com

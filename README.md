@@ -1,6 +1,6 @@
 # Shayan M Hussain — Portfolio
 
-**Live:** https://portfolio-two-psi-nfdlr622io.vercel.app
+**Live:** https://shayan.jointops.dev
 
 A black ground, one hue per project, and a page that scroll plays like a film: a 3D flight down the
 request path, three featured projects that open through their own names, and every project running
@@ -22,6 +22,20 @@ bun run build      # client build + SSR prerender → dist/index.html has the fu
 
 Connected to Vercel: every push to `main` deploys to production, and pull requests get preview URLs. `vercel.json` sets the build and output. `api/whoami.ts`
 deploys as an Edge Function and reads Vercel's city, country and request-id headers.
+
+## SEO and analytics
+
+The canonical address is `https://shayan.jointops.dev`. It is written into these files, so a domain change means updating all of them:
+
+| File | What it does |
+|---|---|
+| `index.html` | title, description, canonical, Open Graph/Twitter cards, and JSON-LD (`ProfilePage` → `Person` with `sameAs` GitHub/LinkedIn). Every fact in it comes from `PRODUCT.md` |
+| `public/robots.txt`, `public/sitemap.xml` | let every crawler in, including AI ones |
+| `public/llms.txt` | a plain-Markdown summary for AI assistants ([llmstxt.org](https://llmstxt.org)). Keep it in step with `PRODUCT.md` |
+| `public/og.jpg` | the 1200×630 social card |
+| `public/shayan-m-hussain.jpg` | the portrait the structured data points to (metadata stripped) |
+
+`@vercel/analytics` and `@vercel/speed-insights` are injected in `main.tsx`. Both are free on Hobby and need switching on once in the project's Analytics and Speed Insights tabs.
 
 ## The visual system (`src/styles/site.css`)
 

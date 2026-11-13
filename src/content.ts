@@ -81,7 +81,7 @@ export const content = {
 
   hero: {
     headline: 'Throw anything at it. It holds.',
-    sub: 'I’m Shayan, a backend architect. I build the infrastructure, tools and open source that other developers put their products on.',
+    sub: 'I’m Shayan M Hussain, a backend architect. I build the infrastructure, tools and open source that other developers put their products on.',
     cta: { label: 'Write to me' },
   },
 

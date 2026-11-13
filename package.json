@@ -16,6 +16,8 @@
     "@joint-ops/hitlimit": "1.5.0",
     "@joint-ops/kaput": "0.1.0",
     "@noble/hashes": "2.4.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.1.0",
     "bunway": "1.1.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
