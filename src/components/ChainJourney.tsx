@@ -1,117 +1,41 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { content } from '../content'
-import { link, short } from '../lib/chain'
-import { fallbackSrc, srcSet } from '../lib/photos'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { journeyStory } from '../content'
 import { progress, useProgressVar } from '../lib/scroll'
+import { JourneyGallery } from './JourneyGallery'
+import { CompressionExample, MissionExample, SdkExample, StreamExample } from './JourneyExamples'
 
-const c = content.chain
-// a block whose art file isn't in src/assets/photos falls back to type only
-const chain = link(c.blocks).map((b) => ({ ...b, art: b.art && srcSet(b.art, 'jpg') ? b.art : undefined }))
-const LAST = chain.length - 1
+const JourneyFlight=lazy(()=>import('./JourneyFlight'))
+const chapterThemes=['light','dark','darker','darker','dark','light'] as const
+const layers=['Surface / collections','Layer 01 / owned state','Layer 02 / compressed records','Layer 03 / indexing','Back to the surface / developer tools','The next chapter']
+const Examples=[null,MissionExample,CompressionExample,StreamExample,SdkExample]
 
-/**
- * His Solana years as a chain the visitor flies through. The section pins; scroll moves a camera forward
- * through blocks stacked in depth (CSS reads --p and each block's --i). The block at the front "mines":
- * its hash scrambles, then settles on the real one.
- */
-export function ChainJourney({ ctaHref }: { ctaHref: string }) {
-  const pin = useRef<HTMLDivElement>(null)
-  const [cur, setCur] = useState(0)
+export function ChainJourney({ctaHref}:{ctaHref:string}) {
+  const pin=useRef<HTMLDivElement>(null)
+  const [motion,setMotion]=useState(false),[current,setCurrent]=useState(0),[flight,setFlight]=useState(true),[near,setNear]=useState(false)
+  const theme=chapterThemes[current]
   useProgressVar(pin)
-
-  // which block is at the front; React skips the render when it hasn't changed
-  useEffect(() => {
-    const el = pin.current
-    if (!el) return
-    let raf = 0
-    const set = () => {
-      raf = 0
-      setCur(Math.round(progress(el) * LAST))
-    }
-    const on = () => void (raf ||= requestAnimationFrame(set))
-    set()
-    addEventListener('scroll', on, { passive: true })
-    addEventListener('resize', on)
-    return () => {
-      cancelAnimationFrame(raf)
-      removeEventListener('scroll', on)
-      removeEventListener('resize', on)
-    }
-  }, [])
-
-  return (
-    <section className="chain" id="chain" aria-labelledby="chain-title">
-      <div className="chain__pin" ref={pin} style={{ '--n': chain.length } as CSSProperties}>
-        <div className="chain__stage">
-          <h2 id="chain-title" className="chain__title">
-            <span className="mono">{c.kicker}</span>
-            {c.title}
-          </h2>
-          <ol className="chain__blocks">
-            {chain.map((b, i) => (
-              <li key={b.hash} className="block" style={{ '--i': i } as CSSProperties} data-current={i === cur} data-art={b.art ? true : undefined}>
-                <p className="block__meta mono" aria-hidden="true">
-                  <span>
-                    #{b.height} · {b.year}
-                  </span>
-                  <span>
-                    hash <Hash hex={b.hash} mining={i === cur} />
-                  </span>
-                  <span>prev {short(b.prev)}</span>
-                </p>
-                <p className="sr-only">{c.blockOf(i + 1, chain.length, b.year)}</p>
-                {b.art && (
-                  <picture className="block__art">
-                    <source type="image/avif" srcSet={srcSet(b.art, 'avif')} sizes="(max-width: 760px) 70vw, 40vw" />
-                    <source type="image/webp" srcSet={srcSet(b.art, 'webp')} sizes="(max-width: 760px) 70vw, 40vw" />
-                    <img src={fallbackSrc(b.art)} alt={b.alt} loading="lazy" decoding="async" width={1000} height={1000} />
-                  </picture>
-                )}
-                <div className="block__words">
-                  <h3>{b.headline}</h3>
-                  <p>{b.line}</p>
-                  {b.href && (
-                    <a className="btn" href={b.href}>
-                      {c.see}
-                    </a>
-                  )}
-                  {b.cta && (
-                    <p className="block__cta">
-                      <a className="btn" href={ctaHref}>
-                        {c.cta}
-                      </a>
-                      <a href={content.person.linkedin} rel="me noopener" target="_blank">
-                        LinkedIn
-                      </a>
-                    </p>
-                  )}
-                </div>
-              </li>
-            ))}
-          </ol>
+  const fail=useCallback(()=>setFlight(false),[])
+  useEffect(()=>{const io=new IntersectionObserver(([e])=>{if(e.isIntersecting){setNear(true);io.disconnect()}},{rootMargin:'600px'});if(pin.current)io.observe(pin.current);return()=>io.disconnect()},[])
+  useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const sync=()=>setMotion(!mq.matches);sync();mq.addEventListener('change',sync);return()=>mq.removeEventListener('change',sync)},[])
+  useEffect(()=>{let raf=0;const update=()=>{raf=0;if(pin.current)setCurrent(Math.min(5,Math.round(progress(pin.current)*5)))};const on=()=>{if(!raf)raf=requestAnimationFrame(update)};update();addEventListener('scroll',on,{passive:true});addEventListener('resize',on);return()=>{cancelAnimationFrame(raf);removeEventListener('scroll',on);removeEventListener('resize',on)}},[])
+  const go=(i:number)=>{const el=pin.current;if(el)scrollTo({top:el.getBoundingClientRect().top+scrollY+(el.offsetHeight-innerHeight)*i/5,behavior:'instant'})}
+  return <section className="journey journey--immersive" id="chain" data-motion={motion} data-theme={theme} aria-label="My Solana story">
+    <div className="journey__pin" ref={pin}>
+      <div className="journey__stage">
+        {motion&&near&&flight&&<Suspense fallback={null}><JourneyFlight onFail={fail} theme={theme}/></Suspense>}
+        <div className="journey__shade"/>
+        <nav className="journey__nav" aria-label="Chapters in my Solana story">{journeyStory.map((s,i)=><button key={s.topic} onClick={()=>go(i)} aria-current={i===current?'step':undefined}><span>{String(i+1).padStart(2,'0')}</span>{s.topic}</button>)}<button onClick={()=>go(5)} aria-current={current===5?'step':undefined}><span>06</span>What’s next?</button></nav>
+        <div className="journey__chapters">
+          {journeyStory.map((s,i)=>{const Example=Examples[i];return <article key={s.title} className="journey__scene" data-active={i===current} inert={motion&&i!==current?true:undefined}>
+            <div className="journey__narration"><h2>{s.title}</h2><p>{s.text}</p><p className="journey__detail">{s.detail}</p><p className="journey__mechanism">{s.mechanism}</p>{i===4&&<a className="btn" href={ctaHref}>Let’s build what’s next</a>}</div>
+            <div className="journey__exhibit">{Example?<Example/>:<JourneyGallery/>}</div>
+          </article>})}
+          <article className="journey__scene journey__outro" data-active={current===5} inert={motion&&current!==5?true:undefined}>
+            <div className="journey__outro-content"><p>From on-chain worlds to the systems behind every request.</p><h2><span>What’s</span> <span>next?</span></h2><p>The same thinking. A different kind of traffic.</p><a href="#work">Meet hitlimit <span aria-hidden="true">↓</span></a><div className="journey__handoff" aria-hidden="true"><i/><i/><i/><i/><i/><b>200</b></div></div>
+          </article>
         </div>
+        <div className="journey__footer"><span>{layers[current]}</span>{motion&&flight&&<span className="journey__animation-hint">Hover to open · click to follow a transaction</span>}</div>
       </div>
-    </section>
-  )
-}
-
-const HEX = '0123456789abcdef'
-
-/** The short hash; while `mining`, it scrambles for 400 ms before settling (not under reduced motion). */
-function Hash({ hex, mining }: { hex: string; mining: boolean }) {
-  const real = short(hex)
-  const [text, setText] = useState(real)
-  useEffect(() => {
-    if (!mining || matchMedia('(prefers-reduced-motion: reduce)').matches) return setText(real)
-    const t0 = performance.now()
-    const id = setInterval(() => {
-      if (performance.now() - t0 >= 400) {
-        clearInterval(id)
-        return setText(real)
-      }
-      setText(real.replace(/[0-9a-f](?!x)/g, () => HEX[(Math.random() * 16) | 0]))
-    }, 40)
-    return () => clearInterval(id)
-  }, [mining, real])
-  return <>{text}</>
+    </div>
+  </section>
 }
