@@ -12,3 +12,4 @@ photos-original
 public/resumes
 .claude/settings.local.json
 .impeccable/hook.cache.json
+.env*

@@ -1,5 +1,7 @@
 # Shayan M Hussain — Portfolio
 
+**Live:** https://portfolio-two-psi-nfdlr622io.vercel.app
+
 A black ground, one hue per project, and a page that scroll plays like a film: a 3D flight down the
 request path, three featured projects that open through their own names, and every project running
 for real in the visitor's tab. Product truth is in `PRODUCT.md`.
@@ -18,7 +20,7 @@ bun run build      # client build + SSR prerender → dist/index.html has the fu
 
 ## Deploy (Vercel)
 
-Push and import; `vercel.json` sets the build and output. `api/whoami.ts`
+Connected to Vercel: every push to `main` deploys to production, and pull requests get preview URLs. `vercel.json` sets the build and output. `api/whoami.ts`
 deploys as an Edge Function and reads Vercel's city, country and request-id headers.
 
 ## The visual system (`src/styles/site.css`)
