@@ -123,7 +123,6 @@ sips -s format jpeg -s formatOptions 78 src/assets/photos/portrait-800.webp --ou
 |---|---|---|
 | `horizon`, `horizon-wide` | IMG_5507 | Contact, printed in blue |
 | `portrait` | IMG_0530 | About, printed in blue |
-| `offcall` | IMG_5346 | kaput, after exit 0 |
 | `chain-solpatrol` | Sol Patrol #3323 (HowRare rank 1), arweave.net/6m345RawbnSFXagmMvSlG4I0hPwQJUoWhABHCK4ZBEg | Solana journey, mission example |
 | `journey-*` | public NFT artwork; each file's collection, name and original URL are in `journey-sources.json` | Solana journey gallery and tunnel mouth |
 

@@ -1,7 +1,6 @@
 import { useEffect, useReducer, useRef, useState, type CSSProperties } from 'react'
 import { content } from '../content'
 import type { Rig } from '../lib/drain'
-import { fallbackSrc, srcSet } from '../lib/photos'
 import { StopSheet } from './StopSheet'
 
 const LOG_LINES = 9
@@ -136,14 +135,10 @@ export function KaputStop() {
               ))}
             </svg>
           ) : (
-            <figure className="offcall">
-              <picture>
-                <source type="image/avif" srcSet={srcSet('offcall', 'avif')} sizes="(max-width: 720px) 90vw, 22rem" />
-                <source type="image/webp" srcSet={srcSet('offcall', 'webp')} sizes="(max-width: 720px) 90vw, 22rem" />
-                <img src={fallbackSrc('offcall')} alt={k.offcall.alt} width={800} height={1000} decoding="async" />
-              </picture>
-              <figcaption className="mono">{k.offcall.caption}</figcaption>
-            </figure>
+            <div className="kp__exit">
+              <span className="kp__exit-code">exit 0</span>
+              <span>{k.offcall}</span>
+            </div>
           )}
 
           <dl className="kp__counts">

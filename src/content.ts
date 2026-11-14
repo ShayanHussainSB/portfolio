@@ -321,10 +321,7 @@ export const content = {
         closing: 'Closing resources in order.',
         exited: (served: number, dropped: number) => `Exited 0. ${served} requests served, ${dropped} dropped.`,
       },
-      offcall: {
-        caption: 'exit 0 · on-call: off',
-        alt: 'Shayan, off call, by a lake in the snow: grey hoodie, dark puffer jacket, snowy slopes behind.',
-      },
+      offcall: 'on-call: off',
       details: [
         'Close order is kaput’s own: the HTTP server first, then queue workers, caches, and databases last.',
         'The Prisma, Redis and BullMQ clients are stand-ins shaped like the real ones, each taking about 0.3 s to close. kaput’s detectors recognise, name and order them.',
